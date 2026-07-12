@@ -1,0 +1,6 @@
+{
+  "name": "Ma librairie à contenu",
+  "description": "Générateur de plan de contenu chaleureux et complice pour les autrices de romance.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
