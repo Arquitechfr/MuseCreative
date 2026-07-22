@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, memo, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Copy, Check, Download, RefreshCw, ArrowLeft, Heart, Sparkles } from "lucide-react";
 import { GeneratedIdea } from "../types";
@@ -10,7 +10,9 @@ interface ResultsScreenProps {
   onRegenerate: () => void;
 }
 
-export default function ResultsScreen({
+export default memo(ResultsScreen);
+
+function ResultsScreen({
   ideas,
   etape,
   onBack,
@@ -19,13 +21,13 @@ export default function ResultsScreen({
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [globalCopied, setGlobalCopied] = useState(false);
 
-  const handleCopyOne = (textToCopy: string, index: number) => {
+  const handleCopyOne = useCallback((textToCopy: string, index: number) => {
     navigator.clipboard.writeText(textToCopy);
     setCopiedIndex(index);
     setTimeout(() => setCopiedIndex(null), 1800);
-  };
+  }, []);
 
-  const getFullTextExport = () => {
+  const fullTextExport = useMemo(() => {
     let text = `==================================================\n`;
     text += `📚 MA LIBRAIRIE À CONTENU - TON PLAN COMPLICE\n`;
     text += `Étape : ${etape}\n`;
@@ -49,18 +51,16 @@ export default function ResultsScreen({
 
     text += `Généré avec tendresse par Ma librairie à contenu ✨`;
     return text;
-  };
+  }, [ideas, etape]);
 
-  const handleCopyAll = () => {
-    const fullText = getFullTextExport();
-    navigator.clipboard.writeText(fullText);
+  const handleCopyAll = useCallback(() => {
+    navigator.clipboard.writeText(fullTextExport);
     setGlobalCopied(true);
     setTimeout(() => setGlobalCopied(false), 2200);
-  };
+  }, [fullTextExport]);
 
-  const handleDownloadFile = () => {
-    const fullText = getFullTextExport();
-    const blob = new Blob([fullText], { type: "text/plain;charset=utf-8" });
+  const handleDownloadFile = useCallback(() => {
+    const blob = new Blob([fullTextExport], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -69,7 +69,16 @@ export default function ResultsScreen({
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-  };
+  }, [fullTextExport, etape]);
+
+  const fullPostTexts = useMemo(() => {
+    return ideas.map((item) => {
+      const stepsText = item.structure && item.structure.length > 0
+        ? item.structure.map((s, i) => `  ${i + 1}. ${s}`).join("\n")
+        : "";
+      return `Titre : ${item.idee}\n\nAngle & Accroche :\n${item.accroche}\n\nComment structurer ton post :\n${stepsText}\n\nPourquoi ça marche :\n${item.pourquoi_ca_marche}`;
+    });
+  }, [ideas]);
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6">
@@ -138,21 +147,6 @@ export default function ResultsScreen({
       <div className="space-y-6 mb-8">
         <AnimatePresence mode="popLayout">
           {ideas.map((item, index) => {
-            const stepsText = item.structure && item.structure.length > 0 
-              ? item.structure.map((s, i) => `  ${i + 1}. ${s}`).join("\n") 
-              : "";
-            
-            const fullPostText = `Titre : ${item.idee}
-
-Angle & Accroche :
-${item.accroche}
-
-Comment structurer ton post :
-${stepsText}
-
-Pourquoi ça marche :
-${item.pourquoi_ca_marche}`;
-
             const isCopied = copiedIndex === index;
 
             return (
@@ -217,7 +211,7 @@ ${item.pourquoi_ca_marche}`;
                   {/* Copy Button Box */}
                   <div className="shrink-0 flex sm:flex-col justify-end pt-2">
                     <button
-                      onClick={() => handleCopyOne(fullPostText, index)}
+                      onClick={() => handleCopyOne(fullPostTexts[index], index)}
                       className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-3xs cursor-pointer ${
                         isCopied
                           ? "bg-[#387a63] text-white"

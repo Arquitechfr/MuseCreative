@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { BookMarked, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
 import { EtapeType, GeneratedIdea } from "./types";
 import WelcomeScreen from "./components/WelcomeScreen";
 import GeneratingScreen from "./components/GeneratingScreen";
@@ -12,11 +12,9 @@ export default function App() {
   const [seenIdeas, setSeenIdeas] = useState<string[]>([]);
 
   const [generatedIdeas, setGeneratedIdeas] = useState<GeneratedIdea[]>([]);
-  const [error, setError] = useState<string | null>(null);
 
-  const handleGeneratePlan = async (selectedEtape: EtapeType, useSeenIdeas: boolean = true) => {
+  const handleGeneratePlan = useCallback(async (selectedEtape: EtapeType, useSeenIdeas: boolean = true) => {
     setStep("generating");
-    setError(null);
 
     const currentSeen = useSeenIdeas === false ? [] : seenIdeas;
 
@@ -51,7 +49,6 @@ export default function App() {
       setStep("results");
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "Une erreur inattendue est survenue.");
       // If error occurs, we can try to fall back locally on the client side
       try {
         // Simple local fallback generation
@@ -89,54 +86,44 @@ export default function App() {
         setStep("results");
       } catch (innerErr) {
         setStep("welcome");
-        setError("Impossible de générer le plan localement également.");
       }
     }
-  };
+  }, [seenIdeas]);
 
-  const handleSelectEtape = (selectedEtape: EtapeType) => {
+  const handleSelectEtape = useCallback((selectedEtape: EtapeType) => {
     setEtape(selectedEtape);
     setSeenIdeas([]);
     handleGeneratePlan(selectedEtape, false);
-  };
+  }, [handleGeneratePlan]);
 
-  const handleBackToWelcome = () => {
+  const handleBackToWelcome = useCallback(() => {
     setStep("welcome");
     setEtape(null);
     setSeenIdeas([]);
-  };
+  }, []);
 
-  const handleRegenerate = () => {
+  const handleRegenerate = useCallback(() => {
     if (etape) {
       handleGeneratePlan(etape, true);
     }
-  };
+  }, [etape, handleGeneratePlan]);
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-[#F7D6D6] to-[#FBC8A6] text-[#2d1b15] flex flex-col selection:bg-[#F4C2C2]/30 selection:text-[#5c1d24] relative overflow-x-hidden">
       {/* Sun-kissed Soft Blurry Mesh Gradient Background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none">
         {/* Soft Peach Bubble */}
-        <div className="absolute top-[-10%] left-[-10%] w-[80vw] h-[80vw] max-w-[650px] max-h-[650px] rounded-full bg-[#FBC8A6]/40 blur-[100px] sm:blur-[130px]" />
-        
-        {/* Soft Rose Poudré Bubble */}
-        <div className="absolute top-[25%] right-[-10%] w-[75vw] h-[75vw] max-w-[600px] max-h-[600px] rounded-full bg-[#F7D6D6]/45 blur-[110px] sm:blur-[140px]" />
-        
-        {/* Soft White Contrast Highlight Bubble */}
-        <div className="absolute top-[12%] left-[30%] w-[60vw] h-[60vw] max-w-[500px] max-h-[500px] rounded-full bg-white/20 blur-[100px] sm:blur-[120px]" />
-        
-        {/* Warm Peach Glow */}
-        <div className="absolute bottom-[10%] left-[-5%] w-[85vw] h-[85vw] max-w-[700px] max-h-[700px] rounded-full bg-[#FBC8A6]/35 blur-[120px] sm:blur-[150px]" />
-        
-        {/* Soft Rose Touch Bottom-Right */}
-        <div className="absolute bottom-[20%] right-[-5%] w-[50vw] h-[50vw] max-w-[400px] max-h-[400px] rounded-full bg-[#F7D6D6]/20 blur-[100px]" />
+        <div className="absolute top-[-10%] left-[-10%] w-[70vw] h-[70vw] max-w-[550px] max-h-[550px] rounded-full bg-[#FBC8A6]/40 blur-[80px] sm:blur-[100px] will-change-transform" />
 
-        {/* Soft Rose Glow */}
-        <div className="absolute bottom-[-10%] right-[10%] w-[70vw] h-[70vw] max-w-[600px] max-h-[600px] rounded-full bg-[#F7D6D6]/35 blur-[100px] sm:blur-[130px]" />
+        {/* Soft Rose Poudré Bubble */}
+        <div className="absolute top-[20%] right-[-10%] w-[65vw] h-[65vw] max-w-[500px] max-h-[500px] rounded-full bg-[#F7D6D6]/45 blur-[80px] sm:blur-[100px] will-change-transform" />
+
+        {/* Warm Peach Glow Bottom */}
+        <div className="absolute bottom-[-10%] left-[10%] w-[60vw] h-[60vw] max-w-[500px] max-h-[500px] rounded-full bg-[#F7D6D6]/30 blur-[80px] sm:blur-[100px] will-change-transform" />
       </div>
 
       {/* Premium Top Cozy Glass Header */}
-      <header className="border-b border-[#F4C2C2]/40 bg-white/10 backdrop-blur-md sticky top-0 z-50 shadow-[0_2px_12px_rgba(244,194,194,0.12)]">
+      <header className="border-b border-[#F4C2C2]/40 bg-white/10 backdrop-blur-sm sticky top-0 z-50 shadow-[0_2px_12px_rgba(244,194,194,0.12)]" style={{ contain: 'layout paint' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <button
             onClick={handleBackToWelcome}

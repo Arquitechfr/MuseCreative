@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { motion } from "motion/react";
 import { EtapeType } from "../types";
 
@@ -5,7 +6,9 @@ interface WelcomeScreenProps {
   onSelectEtape: (etape: EtapeType) => void;
 }
 
-export default function WelcomeScreen({ onSelectEtape }: WelcomeScreenProps) {
+export default memo(WelcomeScreen);
+
+function WelcomeScreen({ onSelectEtape }: WelcomeScreenProps) {
   const cards: {
     etape: EtapeType;
     title: string;
