@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Heart } from "lucide-react";
 import { EtapeType, GeneratedIdea } from "./types";
@@ -12,8 +12,7 @@ export default function App() {
   const [seenIdeas, setSeenIdeas] = useState<string[]>([]);
 
   const [generatedIdeas, setGeneratedIdeas] = useState<GeneratedIdea[]>([]);
-
-  const handleGeneratePlan = useCallback(async (selectedEtape: EtapeType, useSeenIdeas: boolean = true) => {
+  const handleGeneratePlan = async (selectedEtape: EtapeType, useSeenIdeas: boolean = true) => {
     setStep("generating");
 
     const currentSeen = useSeenIdeas === false ? [] : seenIdeas;
@@ -88,129 +87,93 @@ export default function App() {
         setStep("welcome");
       }
     }
-  }, [seenIdeas]);
+  };
 
-  const handleSelectEtape = useCallback((selectedEtape: EtapeType) => {
+  const handleSelectEtape = (selectedEtape: EtapeType) => {
     setEtape(selectedEtape);
     setSeenIdeas([]);
     handleGeneratePlan(selectedEtape, false);
-  }, [handleGeneratePlan]);
+  };
 
-  const handleBackToWelcome = useCallback(() => {
+  const handleBackToWelcome = () => {
     setStep("welcome");
     setEtape(null);
     setSeenIdeas([]);
-  }, []);
+  };
 
-  const handleRegenerate = useCallback(() => {
+  const handleRegenerate = () => {
     if (etape) {
       handleGeneratePlan(etape, true);
     }
-  }, [etape, handleGeneratePlan]);
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-[#F7D6D6] to-[#FBC8A6] text-[#2d1b15] flex flex-col selection:bg-[#F4C2C2]/30 selection:text-[#5c1d24] relative overflow-x-hidden">
-      {/* Sun-kissed Soft Blurry Mesh Gradient Background */}
+    <div className="min-h-screen bg-gradient-to-br from-[#FFF0E6] via-[#FFC5B5] to-[#FFA095] text-[#2d1b15] flex flex-col selection:bg-[#F4C2C2]/30 selection:text-[#5c1d24] relative overflow-x-hidden">
+      {/* Soft gradient background — lightweight, no blur */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none">
-        {/* Soft Peach Bubble */}
-        <div className="absolute top-[-10%] left-[-10%] w-[70vw] h-[70vw] max-w-[550px] max-h-[550px] rounded-full bg-[#FBC8A6]/40 blur-[80px] sm:blur-[100px] will-change-transform" />
-
-        {/* Soft Rose Poudré Bubble */}
-        <div className="absolute top-[20%] right-[-10%] w-[65vw] h-[65vw] max-w-[500px] max-h-[500px] rounded-full bg-[#F7D6D6]/45 blur-[80px] sm:blur-[100px] will-change-transform" />
-
-        {/* Warm Peach Glow Bottom */}
-        <div className="absolute bottom-[-10%] left-[10%] w-[60vw] h-[60vw] max-w-[500px] max-h-[500px] rounded-full bg-[#F7D6D6]/30 blur-[80px] sm:blur-[100px] will-change-transform" />
+        <div className="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] max-w-[500px] max-h-[500px] rounded-full bg-[#FBC8A6]/30" />
+        <div className="absolute top-[20%] right-[-10%] w-[55vw] h-[55vw] max-w-[450px] max-h-[450px] rounded-full bg-[#F7D6D6]/30" />
+        <div className="absolute bottom-[-10%] right-[10%] w-[50vw] h-[50vw] max-w-[400px] max-h-[400px] rounded-full bg-[#F7D6D6]/25" />
       </div>
 
       {/* Premium Top Cozy Glass Header */}
-      <header className="border-b border-[#F4C2C2]/40 bg-white/10 backdrop-blur-sm sticky top-0 z-50 shadow-[0_2px_12px_rgba(244,194,194,0.12)]" style={{ contain: 'layout paint' }}>
+      <header className="border-b border-[#F4C2C2]/40 bg-white/30 sticky top-0 z-50 shadow-[0_2px_12px_rgba(244,194,194,0.12)]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <button
             onClick={handleBackToWelcome}
-            className="flex items-center hover:opacity-85 transition-opacity cursor-pointer text-left select-none gap-2 sm:gap-2.5"
+            className="flex items-center hover:opacity-85 transition-opacity cursor-pointer text-left select-none gap-2 sm:gap-3"
           >
-            <span className="font-serif-elegant text-xl sm:text-2xl font-bold tracking-tight leading-none bg-gradient-to-r from-[#f43f5e] via-[#eb8351] to-[#fdba74] bg-clip-text text-transparent select-none pb-0.5">
-              Ma librairie à contenu
+            <span className="font-serif-elegant text-xl sm:text-2xl font-bold tracking-tight text-[#2d1b15] select-none pb-0.5">
+              Muse Créative
             </span>
-            <div className="w-8 h-8 sm:w-9 sm:h-9 relative rotate-[10deg] transform origin-center flex items-center justify-center -mt-1">
+            <div className="w-9 h-7 sm:w-10 sm:h-8 relative rotate-[12deg] transform origin-center flex items-center justify-center -mt-1">
               <svg
-                viewBox="0 0 100 80"
+                viewBox="0 0 120 90"
                 className="w-full h-full"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                {/* Soft Background Fill for the book pages */}
+                {/* Backing cover shadow (pink) */}
                 <path
-                  d="M 50,15 
-                     C 50,15 35,11 15,15 
-                     C 8,16.5 5,19 5,19 
-                     L 5,59 
-                     C 5,59 8,56.5 15,55 
-                     C 35,51 50,55 50,55 
-                     C 50,55 65,51 85,55 
-                     C 92,56.5 95,59 95,59 
-                     L 95,19 
-                     C 95,19 92,16.5 85,15 
-                     C 65,11 50,15 50,15 Z"
-                  fill="#fffdfa"
-                />
-                
-                {/* Stacked bottom pages effect */}
-                <path
-                  d="M 5,55 C 5,55 8,52.5 15,51 C 35,47 50,51 50,51 C 50,51 65,47 85,51 C 92,52.5 95,55 95,55"
-                  stroke="#eb8351"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M 5,57 C 5,57 8,54.5 15,53 C 35,49 50,53 50,53 C 50,53 65,49 85,53 C 92,54.5 95,57 95,57"
-                  stroke="#eb8351"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                />
-                
-                {/* Main Page Outline */}
-                <path
-                  d="M 50,15 
-                     C 50,15 35,11 15,15 
-                     C 8,16.5 5,19 5,19 
-                     L 5,59 
-                     C 5,59 8,56.5 15,55 
-                     C 35,51 50,55 50,55 
-                     C 50,55 65,51 85,55 
-                     C 92,56.5 95,59 95,59 
-                     L 95,19 
-                     C 95,19 92,16.5 85,15 
-                     C 65,11 50,15 50,15 Z"
-                  stroke="#eb8351"
+                  d="M 12,28 C 30,22 45,26 60,30 C 75,26 90,22 108,28 L 104,74 C 88,68 73,72 60,76 C 47,72 32,68 16,74 Z"
+                  fill="#FFCAD4"
+                  stroke="#2d1b15"
                   strokeWidth="2.5"
                   strokeLinejoin="round"
-                  strokeLinecap="round"
                 />
-                
-                {/* Book center spine line */}
+                {/* Main Book Pages (Lighter Pink) */}
                 <path
-                  d="M 50,15 L 50,55"
-                  stroke="#eb8351"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-                
-                {/* Heart in the right page */}
-                <path
-                  d="M 72.5,39 C 72.5,39 67,33 67,28 C 67,24 70,21 72.5,24 C 75,21 78,24 78,28 C 78,33 72.5,39 72.5,39 Z"
-                  fill="#ffe4e6"
-                  stroke="#eb8351"
-                  strokeWidth="1.8"
+                  d="M 14,26 C 31,20 46,24 60,28 C 74,24 89,20 106,26 L 102,70 C 86,64 71,68 60,72 C 49,68 34,64 18,70 Z"
+                  fill="#FDE2E4"
+                  stroke="#2d1b15"
+                  strokeWidth="2.5"
                   strokeLinejoin="round"
+                />
+                {/* Spine Line */}
+                <path d="M 60,28 L 60,72" stroke="#2d1b15" strokeWidth="2" strokeLinecap="round" />
+                
+                {/* Additional Page Stacking Lines */}
+                <path d="M 18,71.5 C 34,65.5 49,69.5 60,73.5" stroke="#2d1b15" strokeWidth="1.2" />
+                <path d="M 102,71.5 C 86,65.5 71,69.5 60,73.5" stroke="#2d1b15" strokeWidth="1.2" />
+                <path d="M 18,73 C 34,67 49,71 60,75" stroke="#2d1b15" strokeWidth="1.2" />
+                <path d="M 102,73 C 86,67 71,71 60,75" stroke="#2d1b15" strokeWidth="1.2" />
+
+                {/* Heart on Right Page */}
+                <path
+                  d="M 82,53 C 82,53 76,47 76,43 C 76,39.5 79,37 82,39.5 C 85,37 88,39.5 88,43 C 88,47 82,53 82,53 Z"
+                  fill="#FFCAD4"
+                  stroke="#2d1b15"
+                  strokeWidth="2"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
                 />
               </svg>
             </div>
           </button>
 
           <div className="flex items-center gap-4 text-xs font-semibold text-[#605249]/80 tracking-wide">
-            <span className="inline-flex items-center gap-1 bg-gradient-to-r from-[#d1f7e8] to-[#a9f1df] border-[#065f46]/15 text-[#065f46] px-2.5 py-1 rounded-full text-[10px] uppercase font-bold tracking-wide shadow-3xs">
-              <Heart className="w-2.5 h-2.5 fill-[#065f46] stroke-[#065f46]" />
+            <span className="inline-flex items-center gap-1 bg-[#5c1d24]/10 border border-[#5c1d24]/20 text-[#5c1d24] px-2.5 py-1 rounded-full text-[10px] uppercase font-bold tracking-wide shadow-3xs">
+              <Heart className="w-2.5 h-2.5 fill-[#5c1d24] stroke-[#5c1d24]" />
               Romance Edition
             </span>
           </div>
@@ -266,7 +229,7 @@ export default function App() {
       {/* Visual footer details */}
       <footer className="bg-white/5 border-t border-[#F4C2C2]/40 py-8 text-center text-xs text-[#2d1b15]/70 relative z-10 shadow-[0_-4px_16px_rgba(244,194,194,0.1)]">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© 2026 Ma librairie à contenu.</p>
+          <p>© 2026 Muse Créative.</p>
           <div className="flex gap-4">
             <span className="hover:text-[#F4C2C2] transition-colors cursor-default">Fait par une autrice, pour des autrices</span>
           </div>

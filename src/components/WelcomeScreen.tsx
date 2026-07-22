@@ -1,4 +1,3 @@
-import { memo } from "react";
 import { motion } from "motion/react";
 import { EtapeType } from "../types";
 
@@ -6,9 +5,7 @@ interface WelcomeScreenProps {
   onSelectEtape: (etape: EtapeType) => void;
 }
 
-export default memo(WelcomeScreen);
-
-function WelcomeScreen({ onSelectEtape }: WelcomeScreenProps) {
+export default function WelcomeScreen({ onSelectEtape }: WelcomeScreenProps) {
   const cards: {
     etape: EtapeType;
     title: string;
@@ -22,27 +19,27 @@ function WelcomeScreen({ onSelectEtape }: WelcomeScreenProps) {
       etape: "Manuscrit en cours d'écriture",
       title: "Manuscrit en cours",
       description: "J'écris mon premier manuscrit, je cherche mes marques et je commence à fédérer ma communauté.",
-      bannerColor: "bg-[#B8E0D2]",
-      borderColor: "hover:border-[#B8E0D2]/70",
-      btnBg: "bg-gradient-to-r from-[#B8E0D2] via-[#FBC8A6] to-[#F4C2C2] hover:opacity-95 border-[#5c1d24]/15 shadow-2xs hover:shadow-xs",
+      bannerColor: "bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3]",
+      borderColor: "hover:border-[#FFA3A5]/50",
+      btnBg: "bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3] hover:opacity-95 border-[#FFA3A5]/10 shadow-2xs hover:shadow-xs",
       btnText: "text-[#5c1d24]",
     },
     {
       etape: "Pré-lancement",
       title: "Pré-lancement / Teasing",
       description: "Mon livre est prêt, je prépare activement sa sortie officielle et je veux faire monter la hype !",
-      bannerColor: "bg-[#B8E0D2]",
-      borderColor: "hover:border-[#B8E0D2]/70",
-      btnBg: "bg-gradient-to-r from-[#B8E0D2] via-[#FBC8A6] to-[#F4C2C2] hover:opacity-95 border-[#5c1d24]/15 shadow-2xs hover:shadow-xs",
+      bannerColor: "bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3]",
+      borderColor: "hover:border-[#FFA3A5]/50",
+      btnBg: "bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3] hover:opacity-95 border-[#FFA3A5]/10 shadow-2xs hover:shadow-xs",
       btnText: "text-[#5c1d24]",
     },
     {
       etape: "Livre sorti",
       title: "Livre déjà sorti",
       description: "Mon roman est disponible ! Je veux continuer à le faire vivre, fidéliser mes lectrices et booster mes ventes.",
-      bannerColor: "bg-[#B8E0D2]",
-      borderColor: "hover:border-[#B8E0D2]/70",
-      btnBg: "bg-gradient-to-r from-[#B8E0D2] via-[#FBC8A6] to-[#F4C2C2] hover:opacity-95 border-[#5c1d24]/15 shadow-2xs hover:shadow-xs",
+      bannerColor: "bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3]",
+      borderColor: "hover:border-[#FFA3A5]/50",
+      btnBg: "bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3] hover:opacity-95 border-[#FFA3A5]/10 shadow-2xs hover:shadow-xs",
       btnText: "text-[#5c1d24]",
     },
   ];
@@ -63,7 +60,7 @@ function WelcomeScreen({ onSelectEtape }: WelcomeScreenProps) {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="font-serif-elegant text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 select-none text-[#4A9B7F] pb-1"
+          className="font-serif-elegant text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 select-none text-[#D55C66] pb-1"
         >
           + de 100 idées de contenu
         </motion.h1>
@@ -99,12 +96,12 @@ function WelcomeScreen({ onSelectEtape }: WelcomeScreenProps) {
               transition={{ duration: 0.5, delay: 0.15 + index * 0.1 }}
               whileHover={{ y: -6, transition: { duration: 0.2 } }}
               onClick={() => onSelectEtape(card.etape)}
-              className={`relative flex flex-col text-left pt-10 pb-8 px-6 sm:px-8 rounded-[28px] border border-white/70 transition-all duration-300 cursor-pointer h-full group bg-[#fffdfa]/94 backdrop-blur-md shadow-[0_12px_32px_-5px_rgba(96,82,73,0.06),0_8px_16px_-6px_rgba(96,82,73,0.02)] hover:shadow-[0_24px_48px_-5px_rgba(184,224,210,0.25),0_12px_24px_-10px_rgba(184,224,210,0.15)] ${card.borderColor} overflow-hidden`}
+              className={`relative flex flex-col text-left pt-10 pb-8 px-6 sm:px-8 rounded-[28px] border border-white/70 transition-all duration-300 cursor-pointer h-full group bg-[#fffdfa]/97 shadow-[0_12px_32px_-5px_rgba(96,82,73,0.06),0_8px_16px_-6px_rgba(96,82,73,0.02)] hover:shadow-[0_24px_48px_-5px_rgba(213,92,102,0.18),0_12px_24px_-10px_rgba(213,92,102,0.1)] ${card.borderColor} overflow-hidden`}
             >
               {/* Colored top banner */}
               <div className={`absolute top-0 left-0 right-0 h-1.5 ${card.bannerColor}`} />
 
-              <h3 className="font-serif text-xl font-bold text-[#2c2520] mb-3 group-hover:text-[#4A9B7F] transition-colors duration-300">
+              <h3 className="font-serif text-xl font-bold text-[#2c2520] mb-3 group-hover:text-[#D55C66] transition-colors duration-300">
                 {card.title}
               </h3>
               

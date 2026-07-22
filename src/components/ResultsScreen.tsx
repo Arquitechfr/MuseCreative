@@ -1,4 +1,4 @@
-import { useState, useMemo, memo, useCallback } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Copy, Check, Download, RefreshCw, ArrowLeft, Heart, Sparkles } from "lucide-react";
 import { GeneratedIdea } from "../types";
@@ -10,9 +10,7 @@ interface ResultsScreenProps {
   onRegenerate: () => void;
 }
 
-export default memo(ResultsScreen);
-
-function ResultsScreen({
+export default function ResultsScreen({
   ideas,
   etape,
   onBack,
@@ -21,13 +19,13 @@ function ResultsScreen({
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [globalCopied, setGlobalCopied] = useState(false);
 
-  const handleCopyOne = useCallback((textToCopy: string, index: number) => {
+  const handleCopyOne = (textToCopy: string, index: number) => {
     navigator.clipboard.writeText(textToCopy);
     setCopiedIndex(index);
     setTimeout(() => setCopiedIndex(null), 1800);
-  }, []);
+  };
 
-  const fullTextExport = useMemo(() => {
+  const getFullTextExport = () => {
     let text = `==================================================\n`;
     text += `📚 MA LIBRAIRIE À CONTENU - TON PLAN COMPLICE\n`;
     text += `Étape : ${etape}\n`;
@@ -49,18 +47,20 @@ function ResultsScreen({
       text += `\n--------------------------------------------------\n\n`;
     });
 
-    text += `Généré avec tendresse par Ma librairie à contenu ✨`;
+    text += `Généré avec tendresse par Muse Créative ✨`;
     return text;
-  }, [ideas, etape]);
+  };
 
-  const handleCopyAll = useCallback(() => {
-    navigator.clipboard.writeText(fullTextExport);
+  const handleCopyAll = () => {
+    const fullText = getFullTextExport();
+    navigator.clipboard.writeText(fullText);
     setGlobalCopied(true);
     setTimeout(() => setGlobalCopied(false), 2200);
-  }, [fullTextExport]);
+  };
 
-  const handleDownloadFile = useCallback(() => {
-    const blob = new Blob([fullTextExport], { type: "text/plain;charset=utf-8" });
+  const handleDownloadFile = () => {
+    const fullText = getFullTextExport();
+    const blob = new Blob([fullText], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -69,16 +69,7 @@ function ResultsScreen({
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-  }, [fullTextExport, etape]);
-
-  const fullPostTexts = useMemo(() => {
-    return ideas.map((item) => {
-      const stepsText = item.structure && item.structure.length > 0
-        ? item.structure.map((s, i) => `  ${i + 1}. ${s}`).join("\n")
-        : "";
-      return `Titre : ${item.idee}\n\nAngle & Accroche :\n${item.accroche}\n\nComment structurer ton post :\n${stepsText}\n\nPourquoi ça marche :\n${item.pourquoi_ca_marche}`;
-    });
-  }, [ideas]);
+  };
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6">
@@ -86,7 +77,7 @@ function ResultsScreen({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <button
           onClick={onBack}
-          className="inline-flex items-center gap-2 text-sm text-[#605249]/80 hover:text-[#4A9B7F] font-medium transition-colors cursor-pointer group"
+          className="inline-flex items-center gap-2 text-sm text-[#605249]/80 hover:text-[#D55C66] font-medium transition-colors cursor-pointer group"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           Choisir une autre étape
@@ -95,7 +86,7 @@ function ResultsScreen({
         <div className="flex flex-wrap items-center gap-3">
           <button
             onClick={onRegenerate}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-[#faf8f5] text-[#4A9B7F] hover:text-[#387a63] border border-[#B8E0D2]/50 rounded-xl text-sm font-semibold transition-all shadow-2xs cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-[#faf8f5] text-[#D55C66] hover:text-[#b33e48] border border-[#D55C66]/30 rounded-xl text-sm font-semibold transition-all shadow-2xs cursor-pointer"
           >
             <RefreshCw className="w-4 h-4" />
             Piocher de nouvelles idées
@@ -131,22 +122,37 @@ function ResultsScreen({
 
       {/* Main Headers */}
       <div className="mb-10 text-center sm:text-left">
-        <span className="inline-flex items-center gap-1 text-xs font-bold text-[#4A9B7F] bg-[#B8E0D2]/15 border border-[#B8E0D2]/40 px-3 py-1 rounded-full uppercase tracking-wider mb-3">
-          <Heart className="w-3 h-3 fill-[#4A9B7F]/40 text-[#4A9B7F]" />
+        <span className="inline-flex items-center gap-1 text-xs font-bold text-[#D55C66] bg-[#D55C66]/10 border border-[#D55C66]/20 px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+          <Heart className="w-3 h-3 fill-[#D55C66]/30 text-[#D55C66]" />
           Ton calendrier éditorial personnalisé
         </span>
-        <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#4A9B7F]">
+        <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#D55C66]">
           Tes idées de contenu
         </h2>
         <p className="text-sm text-[#605249] mt-2 max-w-xl">
-          Étape : <strong className="text-[#4A9B7F] bg-[#B8E0D2]/10 px-2 py-0.5 rounded-md">{etape}</strong>
+          Étape : <strong className="text-[#D55C66] bg-[#D55C66]/10 px-2 py-0.5 rounded-md">{etape}</strong>
         </p>
       </div>
 
       {/* Ideas Stack */}
       <div className="space-y-6 mb-8">
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="wait">
           {ideas.map((item, index) => {
+            const stepsText = item.structure && item.structure.length > 0 
+              ? item.structure.map((s, i) => `  ${i + 1}. ${s}`).join("\n") 
+              : "";
+            
+            const fullPostText = `Titre : ${item.idee}
+
+Angle & Accroche :
+${item.accroche}
+
+Comment structurer ton post :
+${stepsText}
+
+Pourquoi ça marche :
+${item.pourquoi_ca_marche}`;
+
             const isCopied = copiedIndex === index;
 
             return (
@@ -157,14 +163,14 @@ function ResultsScreen({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.4, delay: index * 0.08 }}
-                className="bg-white rounded-2xl border border-[#B8E0D2]/50 shadow-3xs p-6 sm:p-8 hover:shadow-xs hover:border-[#B8E0D2]/90 transition-all duration-300 relative overflow-hidden group"
+                className="bg-white rounded-2xl border border-[#D55C66]/20 shadow-3xs p-6 sm:p-8 hover:shadow-xs hover:border-[#D55C66]/50 transition-all duration-300 relative overflow-hidden group"
               >
                 {/* Decorative left bar */}
-                <div className="absolute top-0 bottom-0 left-0 w-1.5 bg-[#B8E0D2]" />
+                <div className="absolute top-0 bottom-0 left-0 w-1.5 bg-gradient-to-b from-[#D55C66] to-[#FBC8A6]" />
 
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pl-2">
                   <div className="space-y-3 flex-grow">
-                    <h4 className="font-serif text-xl font-bold text-[#2c2520] group-hover:text-[#4A9B7F] transition-colors pt-1">
+                    <h4 className="font-serif text-xl font-bold text-[#2c2520] group-hover:text-[#D55C66] transition-colors pt-1">
                       {item.idee}
                     </h4>
 
@@ -185,7 +191,7 @@ function ResultsScreen({
                         <ol className="list-none space-y-2">
                           {item.structure.map((etapeStr, sIdx) => (
                             <li key={sIdx} className="flex items-start gap-2.5 text-xs text-[#605249]">
-                              <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#B8E0D2]/20 text-[#4A9B7F] font-bold text-[10px] shrink-0 mt-0.5">
+                              <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#D55C66]/10 text-[#D55C66] font-bold text-[10px] shrink-0 mt-0.5">
                                 {sIdx + 1}
                               </span>
                               <span className="leading-relaxed">{etapeStr}</span>
@@ -211,11 +217,11 @@ function ResultsScreen({
                   {/* Copy Button Box */}
                   <div className="shrink-0 flex sm:flex-col justify-end pt-2">
                     <button
-                      onClick={() => handleCopyOne(fullPostTexts[index], index)}
+                      onClick={() => handleCopyOne(fullPostText, index)}
                       className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-3xs cursor-pointer ${
                         isCopied
-                          ? "bg-[#387a63] text-white"
-                          : "bg-[#faf8f5] text-[#4A9B7F] border border-[#B8E0D2]/40 hover:bg-gradient-to-r hover:from-[#F4C2C2] hover:to-[#FBC8A6] hover:text-[#2d1b15] hover:border-transparent"
+                          ? "bg-[#b33e48] text-white"
+                          : "bg-[#faf8f5] text-[#D55C66] border border-[#D55C66]/25 hover:bg-gradient-to-r hover:from-[#FFA3A5] hover:to-[#FFD1B3] hover:text-[#5c1d24] hover:border-transparent"
                       }`}
                     >
                       {isCopied ? (
@@ -245,7 +251,7 @@ function ResultsScreen({
         </p>
         <button
           onClick={onRegenerate}
-          className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-gradient-to-r from-[#B8E0D2] via-[#FBC8A6] to-[#F4C2C2] hover:opacity-95 text-[#2d1b15] rounded-xl text-base font-bold transition-all shadow-md hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+          className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-gradient-to-r from-[#FFA3A5] via-[#FFE2E4] to-[#FFD1B3] hover:opacity-95 text-[#2d1b15] rounded-xl text-base font-bold transition-all shadow-md hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
         >
           <RefreshCw className="w-5 h-5 animate-spin-slow" />
           Générer d'autres idées
@@ -270,7 +276,7 @@ function ResultsScreen({
       <div className="flex justify-center mb-12">
         <button
           onClick={onBack}
-          className="inline-flex items-center gap-2 text-sm text-[#605249] hover:text-[#4A9B7F] font-medium transition-colors cursor-pointer"
+          className="inline-flex items-center gap-2 text-sm text-[#605249] hover:text-[#D55C66] font-medium transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           Retour au choix d'options

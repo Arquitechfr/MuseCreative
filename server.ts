@@ -2,7 +2,6 @@ import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import dotenv from "dotenv";
-import compression from "compression";
 import { ideas } from "./src/data/ideas";
 
 dotenv.config();
@@ -11,8 +10,14 @@ async function startServer() {
   const app = express();
   const PORT = parseInt(process.env.PORT || "0902", 10);
 
-  app.use(compression());
   app.use(express.json());
+
+  // Request logging
+  app.use((req, _res, next) => {
+    const timestamp = new Date().toISOString();
+    console.log(`[${timestamp}] ${req.method} ${req.url}`);
+    next();
+  });
 
   // Security headers
   app.use((_req, res, next) => {
@@ -25,6 +30,7 @@ async function startServer() {
 
   // API Health check
   app.get("/api/health", (_req, res) => {
+    console.log("  → Health check OK");
     res.json({ status: "ok" });
   });
 
@@ -32,25 +38,31 @@ async function startServer() {
   app.post("/api/generate", async (req: express.Request, res: express.Response) => {
     try {
       const { etape, titreLivre, seenIdeas } = req.body;
+      console.log(`  → Génération demandée: etape="${etape}", titreLivre="${titreLivre || "(non fourni)"}", seenIdeas=${Array.isArray(seenIdeas) ? seenIdeas.length : 0} idée(s) déjà vue(s)`);
 
       if (!etape) {
+        console.log("  ✗ Erreur: étape manquante");
         return res.status(400).json({ error: "L'étape est requise." });
       }
 
       // Filter local ideas database for this step
       const filteredIdeas = ideas.filter(idea => idea.etapes.includes(etape));
+      console.log(`  → ${filteredIdeas.length} idée(s) trouvée(s) pour l'étape "${etape}"`);
 
       if (filteredIdeas.length === 0) {
+        console.log("  ✗ Erreur: aucune idée trouvée");
         return res.status(400).json({ error: "Aucune idée trouvée pour cette étape." });
       }
 
       // Filter out seen ideas if passed in the body
       let alreadySeen: string[] = Array.isArray(seenIdeas) ? seenIdeas : [];
       let remainingIdeas = filteredIdeas.filter(idea => !alreadySeen.includes(idea.idee));
+      console.log(`  → ${remainingIdeas.length} idée(s) restante(s) après filtrage`);
 
       let hasReset = false;
       // If we don't have enough unseen ideas (less than 3), reset the pool
       if (remainingIdeas.length < 3) {
+        console.log("  → Réinitialisation du pool d'idées (moins de 3 restantes)");
         remainingIdeas = filteredIdeas;
         alreadySeen = [];
         hasReset = true;
@@ -59,6 +71,7 @@ async function startServer() {
       // Shuffle and select exactly 3 ideas
       const shuffled = [...remainingIdeas].sort(() => 0.5 - Math.random());
       const selected = shuffled.slice(0, Math.min(3, shuffled.length));
+      console.log(`  → ${selected.length} idée(s) sélectionnée(s): ${selected.map(s => s.idee).join(", ")}`);
 
       // Map and replace simple placeholders like [titre du livre]
       const results = selected.map(item => {
@@ -77,10 +90,11 @@ async function startServer() {
         };
       });
 
+      console.log(`  ✓ Génération réussie (${results.length} idée(s) renvoyée(s), reset=${hasReset})`);
       return res.json({ ideas: results, hasReset, resetSeenIdeas: hasReset ? [] : undefined });
 
     } catch (error: any) {
-      console.error("Generation Error:", error);
+      console.error("  ✗ Generation Error:", error);
       res.status(500).json({ error: "Une erreur critique s'est produite lors de la génération." });
     }
   });
@@ -102,7 +116,8 @@ async function startServer() {
       immutable: true,
       index: false,
     }));
-    app.get('*', (_req, res) => {
+    app.get('*', (req, res) => {
+      console.log(`  → SPA fallback: ${req.url}`);
       res.setHeader('Cache-Control', 'no-cache');
       res.sendFile(path.join(distPath, 'index.html'));
     });
@@ -123,5 +138,6 @@ async function startServer() {
 }
 
 startServer().catch(err => {
-  console.error("Failed to start server:", err);
+  console.error("✗ Failed to start server:", err);
+  process.exit(1);
 });

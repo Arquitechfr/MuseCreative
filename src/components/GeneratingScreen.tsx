@@ -1,4 +1,3 @@
-import { memo } from "react";
 import { motion } from "motion/react";
 import { BookOpen, Heart } from "lucide-react";
 
@@ -6,9 +5,7 @@ interface GeneratingScreenProps {
   etape: string;
 }
 
-export default memo(GeneratingScreen);
-
-function GeneratingScreen({ etape }: GeneratingScreenProps) {
+export default function GeneratingScreen({ etape }: GeneratingScreenProps) {
   return (
     <div className="flex flex-col items-center justify-center py-20 px-4 text-center max-w-xl mx-auto min-h-[50vh]">
       <motion.div
