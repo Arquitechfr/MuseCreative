@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Copy, Check, Download, RefreshCw, ArrowLeft, Heart, Sparkles } from "lucide-react";
+import { Copy, Check, Download, RefreshCw, ArrowLeft, Heart, Sparkles, MessageCircle, Send } from "lucide-react";
 import { GeneratedIdea } from "../types";
+import { useAuth } from "../contexts/AuthContext";
+import { useAuthModal } from "../contexts/AuthModalContext";
+import { addFavorite, removeFavorite, subscribeToFavorites, FavoriteItem } from "../services/favoritesService";
 
 interface ResultsScreenProps {
   ideas: GeneratedIdea[];
@@ -16,8 +19,71 @@ export default function ResultsScreen({
   onBack,
   onRegenerate
 }: ResultsScreenProps) {
+  const { user, isAuthenticated } = useAuth();
+  const { openAuthModal } = useAuthModal();
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [globalCopied, setGlobalCopied] = useState(false);
+  const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
+  const [favLoading, setFavLoading] = useState<string | null>(null);
+  const [feedbackOpen, setFeedbackOpen] = useState<number | null>(null);
+  const [feedbackText, setFeedbackText] = useState("");
+  const [feedbackSent, setFeedbackSent] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!user?.uid) return;
+    const unsub = subscribeToFavorites(user.uid, setFavorites);
+    return () => unsub();
+  }, [user?.uid]);
+
+  const isFavorited = (ideaIdee: string) =>
+    favorites.some((f) => f.originalIdee === ideaIdee);
+
+  const getFavoriteId = (ideaIdee: string) =>
+    favorites.find((f) => f.originalIdee === ideaIdee)?.id;
+
+  const handleToggleFavorite = async (idea: GeneratedIdea) => {
+    if (!isAuthenticated) {
+      openAuthModal("signup", "Crée ton compte pour sauvegarder tes favoris");
+      return;
+    }
+    if (!user?.uid) return;
+
+    const favId = getFavoriteId(idea.originalIdee);
+    setFavLoading(idea.originalIdee);
+    try {
+      if (favId) {
+        await removeFavorite(user.uid, favId);
+      } else {
+        await addFavorite(user.uid, idea, etape);
+      }
+    } catch (err) {
+      console.error("Favorite toggle error:", err);
+    } finally {
+      setFavLoading(null);
+    }
+  };
+
+  const handleSendFeedback = async (idea: GeneratedIdea, index: number) => {
+    if (!feedbackText.trim()) return;
+    try {
+      await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ideaIdee: idea.idee,
+          etape,
+          comment: feedbackText,
+          userEmail: user?.email || "anonyme",
+        }),
+      });
+      setFeedbackSent(index);
+      setFeedbackText("");
+      setFeedbackOpen(null);
+      setTimeout(() => setFeedbackSent(null), 3000);
+    } catch (err) {
+      console.error("Feedback error:", err);
+    }
+  };
 
   const handleCopyOne = (textToCopy: string, index: number) => {
     navigator.clipboard.writeText(textToCopy);
@@ -214,8 +280,8 @@ ${item.pourquoi_ca_marche}`;
                     )}
                   </div>
 
-                  {/* Copy Button Box */}
-                  <div className="shrink-0 flex sm:flex-col justify-end pt-2">
+                  {/* Copy + Favorite Button Box */}
+                  <div className="shrink-0 flex sm:flex-col justify-end gap-2 pt-2">
                     <button
                       onClick={() => handleCopyOne(fullPostText, index)}
                       className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-3xs cursor-pointer ${
@@ -236,7 +302,66 @@ ${item.pourquoi_ca_marche}`;
                         </>
                       )}
                     </button>
+                    <button
+                      onClick={() => handleToggleFavorite(item)}
+                      disabled={favLoading === item.originalIdee}
+                      title="Ajouter aux favoris"
+                      className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-3xs cursor-pointer disabled:opacity-50 ${
+                        isFavorited(item.originalIdee)
+                          ? "bg-[#D55C66]/10 text-[#D55C66] border border-[#D55C66]/30"
+                          : "bg-[#faf8f5] text-[#605249] border border-[#605249]/15 hover:border-[#D55C66]/30 hover:text-[#D55C66]"
+                      }`}
+                    >
+                      <Heart
+                        className={`w-4 h-4 ${isFavorited(item.originalIdee) ? "fill-[#D55C66]" : ""}`}
+                      />
+                      {isFavorited(item.originalIdee) ? "En favori" : "Favori"}
+                    </button>
                   </div>
+                </div>
+
+                {/* Feedback link */}
+                <div className="mt-3 pl-2 border-t border-[#605249]/10 pt-3">
+                  {feedbackSent === index ? (
+                    <p className="text-xs text-green-600 font-medium flex items-center gap-1.5">
+                      <Check className="w-3.5 h-3.5" />
+                      Merci pour ton retour !
+                    </p>
+                  ) : feedbackOpen === index ? (
+                    <div className="flex flex-col gap-2">
+                      <textarea
+                        value={feedbackText}
+                        onChange={(e) => setFeedbackText(e.target.value)}
+                        placeholder="Dis-nous pourquoi cette idée ne te convient pas..."
+                        rows={2}
+                        className="w-full text-xs rounded-lg border border-[#605249]/15 bg-[#faf8f5] px-3 py-2 text-[#2c2520] placeholder:text-[#605249]/40 focus:outline-none focus:border-[#D55C66]/40 transition-all resize-none"
+                      />
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleSendFeedback(item, index)}
+                          disabled={!feedbackText.trim()}
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#D55C66] hover:text-[#b33e48] disabled:opacity-40 cursor-pointer"
+                        >
+                          <Send className="w-3.5 h-3.5" />
+                          Envoyer
+                        </button>
+                        <button
+                          onClick={() => { setFeedbackOpen(null); setFeedbackText(""); }}
+                          className="text-xs text-[#605249]/60 hover:text-[#605249] cursor-pointer"
+                        >
+                          Annuler
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => setFeedbackOpen(index)}
+                      className="text-xs text-[#605249]/50 hover:text-[#D55C66] transition-colors cursor-pointer flex items-center gap-1.5"
+                    >
+                      <MessageCircle className="w-3.5 h-3.5" />
+                      Cette idée ne t'inspire pas ? Dis-nous pourquoi
+                    </button>
+                  )}
                 </div>
               </motion.div>
             );

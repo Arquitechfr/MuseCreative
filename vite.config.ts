@@ -22,6 +22,8 @@ export default defineConfig(() => {
             'react-vendor': ['react', 'react-dom'],
             'motion': ['motion'],
             'icons': ['lucide-react'],
+            'firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore'],
+            'router': ['react-router-dom'],
           },
         },
       },

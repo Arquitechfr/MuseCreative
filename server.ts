@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import dotenv from "dotenv";
+import nodemailer from "nodemailer";
 import { ideas } from "./src/data/ideas";
 
 dotenv.config();
@@ -96,6 +97,56 @@ async function startServer() {
     } catch (error: any) {
       console.error("  ✗ Generation Error:", error);
       res.status(500).json({ error: "Une erreur critique s'est produite lors de la génération." });
+    }
+  });
+
+  // API Feedback endpoint - Send feedback email to Jesy
+  app.post("/api/feedback", async (req: express.Request, res: express.Response) => {
+    try {
+      const { ideaIdee, etape, comment, userEmail } = req.body;
+      console.log(`  → Feedback reçu: idée="${ideaIdee}", étape="${etape}", de="${userEmail}"`);
+
+      if (!comment || !comment.trim()) {
+        return res.status(400).json({ error: "Le commentaire est requis." });
+      }
+
+      const feedbackEmail = process.env.FEEDBACK_EMAIL || "contact@musecreative.fr";
+
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST || "",
+        port: parseInt(process.env.SMTP_PORT || "587", 10),
+        secure: parseInt(process.env.SMTP_PORT || "587", 10) === 465,
+        auth: {
+          user: process.env.SMTP_USER || "",
+          pass: process.env.SMTP_PASS || "",
+        },
+      });
+
+      const mailOptions = {
+        from: process.env.SMTP_USER || "noreply@musecreative.fr",
+        to: feedbackEmail,
+        subject: `Feedback idée - ${ideaIdee || "Idée sans titre"}`,
+        text: `Nouveau feedback sur une idée :\n\nIdée : ${ideaIdee}\nÉtape : ${etape}\nUtilisatrice : ${userEmail}\n\nCommentaire :\n${comment}\n\n---\nEnvoyé depuis Muse Créative`,
+        html: `<h3>Nouveau feedback sur une idée</h3>
+          <p><strong>Idée :</strong> ${ideaIdee}</p>
+          <p><strong>Étape :</strong> ${etape}</p>
+          <p><strong>Utilisatrice :</strong> ${userEmail}</p>
+          <p><strong>Commentaire :</strong></p>
+          <p>${comment}</p>
+          <hr><p><em>Envoyé depuis Muse Créative</em></p>`,
+      };
+
+      if (process.env.SMTP_HOST) {
+        await transporter.sendMail(mailOptions);
+        console.log(`  ✓ Feedback envoyé par email à ${feedbackEmail}`);
+      } else {
+        console.log(`  ⚠ SMTP non configuré - feedback non envoyé par email (à configurer)`);
+      }
+
+      return res.json({ success: true });
+    } catch (error: any) {
+      console.error("  ✗ Feedback Error:", error);
+      res.status(500).json({ error: "Une erreur est survenue lors de l'envoi du feedback." });
     }
   });
 
