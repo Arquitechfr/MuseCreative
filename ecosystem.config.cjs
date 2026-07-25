@@ -3,10 +3,12 @@ module.exports = {
     {
       name: 'muse-creative',
       script: 'dist/server.cjs',
+      cwd: __dirname,
       env: {
         NODE_ENV: 'production',
         PORT: '0902',
       },
+      env_file: '.env',
       instances: 1,
       autorestart: true,
       max_restarts: 10,

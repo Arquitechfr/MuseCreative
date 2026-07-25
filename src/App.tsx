@@ -8,6 +8,7 @@ import FavoritesPage from "./pages/FavoritesPage";
 import SettingsPage from "./pages/SettingsPage";
 import LegalNoticePage from "./pages/LegalNoticePage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import ScrollToTop from "./components/ScrollToTop";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading } = useAuth();
@@ -36,6 +37,7 @@ export default function App() {
         <div className="absolute bottom-[-10%] right-[10%] w-[50vw] h-[50vw] max-w-[400px] max-h-[400px] rounded-full bg-[#F7D6D6]/25" />
       </div>
 
+      <ScrollToTop />
       <Header />
 
       <main className="flex-grow py-6 relative">

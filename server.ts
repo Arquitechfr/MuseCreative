@@ -2,7 +2,7 @@ import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import dotenv from "dotenv";
-import nodemailer from "nodemailer";
+import { BrevoClient } from "@getbrevo/brevo";
 import { ideas } from "./src/data/ideas";
 
 dotenv.config();
@@ -111,37 +111,36 @@ async function startServer() {
       }
 
       const feedbackEmail = process.env.FEEDBACK_EMAIL || "contact@musecreative.fr";
+      const brevoApiKey = process.env.BREVO_API_KEY || "";
+      const brevoSenderEmail = process.env.BREVO_SENDER_EMAIL || "contact@musecreative.fr";
+      const brevoSenderName = process.env.BREVO_SENDER_NAME || "Muse Créative";
 
-      const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST || "",
-        port: parseInt(process.env.SMTP_PORT || "587", 10),
-        secure: parseInt(process.env.SMTP_PORT || "587", 10) === 465,
-        auth: {
-          user: process.env.SMTP_USER || "",
-          pass: process.env.SMTP_PASS || "",
-        },
-      });
+      console.log(`  → BREVO_API_KEY=${brevoApiKey ? "(défini)" : "(vide)"}`);
+      console.log(`  → FEEDBACK_EMAIL=${feedbackEmail}`);
 
-      const mailOptions = {
-        from: process.env.SMTP_USER || "noreply@musecreative.fr",
-        to: feedbackEmail,
+      if (!brevoApiKey) {
+        console.log(`  ⚠ BREVO_API_KEY non configuré - feedback non envoyé par email`);
+        return res.json({ success: true, warning: "email_not_configured" });
+      }
+
+      const brevo = new BrevoClient({ apiKey: brevoApiKey });
+
+      await brevo.transactionalEmails.sendTransacEmail({
         subject: `Feedback idée - ${ideaIdee || "Idée sans titre"}`,
-        text: `Nouveau feedback sur une idée :\n\nIdée : ${ideaIdee}\nÉtape : ${etape}\nUtilisatrice : ${userEmail}\n\nCommentaire :\n${comment}\n\n---\nEnvoyé depuis Muse Créative`,
-        html: `<h3>Nouveau feedback sur une idée</h3>
+        sender: { name: brevoSenderName, email: brevoSenderEmail },
+        to: [{ email: feedbackEmail }],
+        replyTo: userEmail ? { email: userEmail } : undefined,
+        htmlContent: `<h3>Nouveau feedback sur une idée</h3>
           <p><strong>Idée :</strong> ${ideaIdee}</p>
           <p><strong>Étape :</strong> ${etape}</p>
           <p><strong>Utilisatrice :</strong> ${userEmail}</p>
           <p><strong>Commentaire :</strong></p>
           <p>${comment}</p>
           <hr><p><em>Envoyé depuis Muse Créative</em></p>`,
-      };
+        textContent: `Nouveau feedback sur une idée :\n\nIdée : ${ideaIdee}\nÉtape : ${etape}\nUtilisatrice : ${userEmail}\n\nCommentaire :\n${comment}\n\n---\nEnvoyé depuis Muse Créative`,
+      });
 
-      if (process.env.SMTP_HOST) {
-        await transporter.sendMail(mailOptions);
-        console.log(`  ✓ Feedback envoyé par email à ${feedbackEmail}`);
-      } else {
-        console.log(`  ⚠ SMTP non configuré - feedback non envoyé par email (à configurer)`);
-      }
+      console.log(`  ✓ Feedback envoyé par email à ${feedbackEmail}`);
 
       return res.json({ success: true });
     } catch (error: any) {
