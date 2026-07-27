@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, Mail, Lock, User as UserIcon, AlertCircle, CheckCircle2 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
@@ -48,6 +48,13 @@ export default function AuthModal({ isOpen, initialMode = "login", onClose, titl
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setMode(initialMode);
+      resetForm();
+    }
+  }, [isOpen, initialMode]);
 
   const resetForm = () => {
     setPrenom("");

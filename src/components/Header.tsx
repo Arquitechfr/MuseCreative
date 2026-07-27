@@ -146,12 +146,20 @@ export default function Header() {
               </div>
             </>
           ) : (
-            <button
-              onClick={() => openAuthModal("signup")}
-              className="inline-flex items-center gap-1.5 bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3] hover:opacity-95 text-[#5c1d24] px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shadow-sm cursor-pointer"
-            >
-              S'inscrire / Connexion
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => openAuthModal("login")}
+                className="inline-flex items-center gap-1.5 bg-white/60 hover:bg-white border border-[#605249]/15 text-[#2c2520] px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer"
+              >
+                Connexion
+              </button>
+              <button
+                onClick={() => openAuthModal("signup")}
+                className="inline-flex items-center gap-1.5 bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3] hover:opacity-95 text-[#5c1d24] px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shadow-sm cursor-pointer"
+              >
+                S'inscrire
+              </button>
+            </div>
           )}
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "motion/react";
 import { Sparkles, Heart, Bookmark, Settings } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
@@ -8,6 +8,7 @@ import { subscribeToFavorites, FavoriteItem } from "../services/favoritesService
 export default function DashboardPage() {
   const { profile } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -32,9 +33,46 @@ export default function DashboardPage() {
         <h1 className="font-serif-elegant text-3xl sm:text-4xl font-bold text-[#2d1b15] mb-2">
           Bonjour {profile?.prenom} ✨
         </h1>
-        <p className="text-sm text-[#605249] mb-8">
+        <p className="text-sm text-[#605249] mb-6">
           Contente de te revoir dans ton espace créatif.
         </p>
+
+        {/* Navigation tabs */}
+        <div className="flex gap-2 mb-8 border-b border-[#F4C2C2]/30 pb-px">
+          <button
+            onClick={() => navigate("/")}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-t-xl text-sm font-semibold transition-all cursor-pointer ${
+              location.pathname === "/"
+                ? "bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3] text-[#5c1d24] shadow-sm"
+                : "text-[#605249] hover:text-[#D55C66] hover:bg-[#F4C2C2]/10"
+            }`}
+          >
+            <Sparkles className="w-4 h-4" />
+            Générer de nouvelles idées
+          </button>
+          <button
+            onClick={() => navigate("/mes-favoris")}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-t-xl text-sm font-semibold transition-all cursor-pointer ${
+              location.pathname === "/mes-favoris"
+                ? "bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3] text-[#5c1d24] shadow-sm"
+                : "text-[#605249] hover:text-[#D55C66] hover:bg-[#F4C2C2]/10"
+            }`}
+          >
+            <Bookmark className="w-4 h-4" />
+            Mes favoris
+          </button>
+          <button
+            onClick={() => navigate("/parametres")}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-t-xl text-sm font-semibold transition-all cursor-pointer ${
+              location.pathname === "/parametres"
+                ? "bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3] text-[#5c1d24] shadow-sm"
+                : "text-[#605249] hover:text-[#D55C66] hover:bg-[#F4C2C2]/10"
+            }`}
+          >
+            <Settings className="w-4 h-4" />
+            Paramètres
+          </button>
+        </div>
 
         {/* Stats card */}
         <div className="bg-white/70 rounded-2xl border border-[#F4C2C2]/30 p-6 mb-6 shadow-sm">
@@ -88,32 +126,6 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Action buttons */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
-          <button
-            onClick={() => navigate("/")}
-            className="flex flex-col items-center gap-3 bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3] hover:opacity-95 text-[#5c1d24] rounded-2xl p-6 transition-all shadow-md hover:scale-[1.02] cursor-pointer"
-          >
-            <Sparkles className="w-7 h-7" />
-            <span className="font-bold text-sm">Générer de nouvelles idées</span>
-          </button>
-
-          <Link
-            to="/mes-favoris"
-            className="flex flex-col items-center gap-3 bg-white/70 hover:bg-white border border-[#F4C2C2]/30 text-[#2c2520] rounded-2xl p-6 transition-all shadow-sm hover:scale-[1.02]"
-          >
-            <Bookmark className="w-7 h-7 text-[#D55C66]" />
-            <span className="font-bold text-sm">Mes favoris</span>
-          </Link>
-
-          <Link
-            to="/parametres"
-            className="flex flex-col items-center gap-3 bg-white/70 hover:bg-white border border-[#F4C2C2]/30 text-[#2c2520] rounded-2xl p-6 transition-all shadow-sm hover:scale-[1.02]"
-          >
-            <Settings className="w-7 h-7 text-[#D55C66]" />
-            <span className="font-bold text-sm">Paramètres</span>
-          </Link>
-        </div>
       </motion.div>
     </div>
   );

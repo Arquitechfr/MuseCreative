@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { EtapeType, GeneratedIdea } from "../types";
 import WelcomeScreen from "../components/WelcomeScreen";
@@ -9,12 +9,32 @@ import { useAuthModal } from "../contexts/AuthModalContext";
 
 export default function HomeFlow() {
   const { isAuthenticated } = useAuth();
-  const { openAuthModal } = useAuthModal();
+  const { isOpen, openAuthModal } = useAuthModal();
   const [step, setStep] = useState<"welcome" | "generating" | "results">("welcome");
   const [etape, setEtape] = useState<EtapeType | null>(null);
   const [seenIdeas, setSeenIdeas] = useState<string[]>([]);
   const [generatedIdeas, setGeneratedIdeas] = useState<GeneratedIdea[]>([]);
   const [authPrompted, setAuthPrompted] = useState(false);
+  const [pendingResults, setPendingResults] = useState(false);
+  const wasModalOpen = useRef(false);
+
+  useEffect(() => {
+    if (pendingResults && isAuthenticated) {
+      setPendingResults(false);
+      setStep("results");
+    }
+  }, [pendingResults, isAuthenticated]);
+
+  useEffect(() => {
+    if (wasModalOpen.current && !isOpen && pendingResults && !isAuthenticated) {
+      setPendingResults(false);
+      setAuthPrompted(false);
+      setStep("welcome");
+      setEtape(null);
+      setSeenIdeas([]);
+    }
+    wasModalOpen.current = isOpen;
+  }, [isOpen, pendingResults, isAuthenticated]);
 
   const handleGeneratePlan = async (selectedEtape: EtapeType, useSeenIdeas: boolean = true) => {
     setStep("generating");
@@ -47,9 +67,10 @@ export default function HomeFlow() {
       if (!isAuthenticated && !authPrompted) {
         setAuthPrompted(true);
         openAuthModal("signup", "Crée ton compte pour voir tes idées");
+        setPendingResults(true);
+      } else {
+        setStep("results");
       }
-
-      setStep("results");
     } catch (err: any) {
       console.error(err);
       try {
@@ -85,9 +106,10 @@ export default function HomeFlow() {
         if (!isAuthenticated && !authPrompted) {
           setAuthPrompted(true);
           openAuthModal("signup", "Crée ton compte pour voir tes idées");
+          setPendingResults(true);
+        } else {
+          setStep("results");
         }
-
-        setStep("results");
       } catch (innerErr) {
         setStep("welcome");
       }

@@ -2,6 +2,7 @@ import { createContext, useContext, useState, ReactNode } from "react";
 import AuthModal, { AuthModalMode } from "../components/auth/AuthModal";
 
 interface AuthModalContextType {
+  isOpen: boolean;
   openAuthModal: (mode?: AuthModalMode, title?: string) => void;
   closeAuthModal: () => void;
 }
@@ -25,7 +26,7 @@ export function AuthModalProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthModalContext.Provider value={{ openAuthModal, closeAuthModal }}>
+    <AuthModalContext.Provider value={{ isOpen, openAuthModal, closeAuthModal }}>
       {children}
       <AuthModal isOpen={isOpen} initialMode={mode} onClose={closeAuthModal} title={title} />
     </AuthModalContext.Provider>
