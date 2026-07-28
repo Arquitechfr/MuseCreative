@@ -64,6 +64,7 @@ export default function AuthModal({ isOpen, initialMode = "login", onClose, titl
     setConsent(false);
     setError("");
     setSuccess("");
+    setLoading(false);
   };
 
   const handleClose = () => {
@@ -108,6 +109,8 @@ export default function AuthModal({ isOpen, initialMode = "login", onClose, titl
     } catch (err: any) {
       setError(getFirebaseErrorMessage(err));
       setLoading(false);
+    } finally {
+      if (mode !== "forgot-password") setLoading(false);
     }
   };
 

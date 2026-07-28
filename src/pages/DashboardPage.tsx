@@ -30,12 +30,9 @@ export default function DashboardPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <h1 className="font-serif-elegant text-3xl sm:text-4xl font-bold text-[#2d1b15] mb-2">
-          Bonjour {profile?.prenom} ✨
+        <h1 className="font-serif-elegant text-3xl sm:text-4xl font-bold text-[#2d1b15] mb-6">
+          Bonjour {profile?.prenom}
         </h1>
-        <p className="text-sm text-[#605249] mb-6">
-          Contente de te revoir dans ton espace créatif.
-        </p>
 
         {/* Navigation tabs */}
         <div className="flex gap-2 mb-8 border-b border-[#F4C2C2]/30 pb-px">

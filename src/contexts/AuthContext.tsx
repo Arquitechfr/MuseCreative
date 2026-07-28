@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, useRef, ReactNode } from "react";
 import {
   User,
   createUserWithEmailAndPassword,
@@ -48,11 +48,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const isSigningUp = useRef(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
       if (firebaseUser) {
+        if (isSigningUp.current) {
+          setLoading(false);
+          return;
+        }
         try {
           const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
           if (userDoc.exists()) {
@@ -82,18 +87,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signUp = async (email: string, password: string, prenom: string, consent: boolean) => {
-    const credential = await createUserWithEmailAndPassword(auth, email, password);
-    await updateProfile(credential.user, { displayName: prenom });
+    isSigningUp.current = true;
+    try {
+      const credential = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(credential.user, { displayName: prenom });
 
-    const newProfile: UserProfile = {
-      uid: credential.user.uid,
-      prenom,
-      email,
-      consent,
-      provider: "password",
-    };
-    await setDoc(doc(db, "users", credential.user.uid), newProfile);
-    setProfile(newProfile);
+      const newProfile: UserProfile = {
+        uid: credential.user.uid,
+        prenom,
+        email,
+        consent,
+        provider: "password",
+      };
+      await setDoc(doc(db, "users", credential.user.uid), newProfile);
+      setProfile(newProfile);
+    } finally {
+      isSigningUp.current = false;
+    }
   };
 
   const signIn = async (email: string, password: string) => {
