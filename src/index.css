@@ -13,3 +13,12 @@ body {
   color: #2c2520;
   font-family: var(--font-sans);
 }
+
+/* responsive: cache la scrollbar tout en gardant le scroll tactile (tabs dashboard) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

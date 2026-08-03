@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { Copy, Check, Download, Heart, Bookmark } from "lucide-react";
+import { Copy, Check, Heart, Bookmark } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { subscribeToFavorites, removeFavorite, FavoriteItem } from "../services/favoritesService";
 
@@ -42,40 +42,6 @@ export default function FavoritesPage() {
     }
   };
 
-  const handleExport = () => {
-    let text = `==================================================\n`;
-    text += `📚 MES FAVORIS - MUSE CRÉATIVE\n`;
-    text += `==================================================\n\n`;
-
-    favorites.forEach((fav, index) => {
-      text += `💡 IDÉE ${index + 1} : ${fav.idee}\n`;
-      text += `Étape : ${fav.etape}\n`;
-      text += `✍️ Accroche :\n${fav.accroche}\n\n`;
-      if (fav.structure && fav.structure.length > 0) {
-        text += `📋 Structure :\n`;
-        fav.structure.forEach((step, i) => {
-          text += `  ${i + 1}. ${step}\n`;
-        });
-        text += `\n`;
-      }
-      if (fav.pourquoi_ca_marche) {
-        text += `🎯 Pourquoi ça marche :\n${fav.pourquoi_ca_marche}\n`;
-      }
-      text += `\n--------------------------------------------------\n\n`;
-    });
-
-    text += `Exporté depuis Muse Créative ✨`;
-    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `mes_favoris_muse_creative.txt`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -102,15 +68,6 @@ export default function FavoritesPage() {
                 : "Aucune idée en favoris pour le moment"}
             </p>
           </div>
-          {favorites.length > 0 && (
-            <button
-              onClick={handleExport}
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-[#faf8f5] text-[#605249] border border-[#605249]/20 rounded-xl text-sm font-semibold transition-all shadow-sm cursor-pointer"
-            >
-              <Download className="w-4 h-4" />
-              Exporter en .txt
-            </button>
-          )}
         </div>
 
         {favorites.length === 0 ? (

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Copy, Check, Download, RefreshCw, ArrowLeft, Heart, Sparkles, MessageCircle, Send } from "lucide-react";
+import { Copy, Check, RefreshCw, ArrowLeft, Heart, Sparkles, MessageCircle, Send } from "lucide-react";
 import { GeneratedIdea } from "../types";
 import { useAuth } from "../contexts/AuthContext";
 import { useAuthModal } from "../contexts/AuthModalContext";
@@ -124,19 +124,6 @@ export default function ResultsScreen({
     setTimeout(() => setGlobalCopied(false), 2200);
   };
 
-  const handleDownloadFile = () => {
-    const fullText = getFullTextExport();
-    const blob = new Blob([fullText], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `plan_contenu_${etape.toLowerCase().replace(/\s+/g, "_")}.txt`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
-
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6">
       {/* Upper Navigation Row */}
@@ -173,15 +160,6 @@ export default function ResultsScreen({
                 Tout copier d'un coup
               </>
             )}
-          </button>
-
-          <button
-            onClick={handleDownloadFile}
-            className="inline-flex items-center gap-2 px-3 py-2 bg-white hover:bg-[#faf8f5] text-[#605249] border border-[#605249]/20 rounded-xl text-sm font-semibold transition-all shadow-2xs cursor-pointer"
-            title="Télécharger en fichier .txt"
-          >
-            <Download className="w-4 h-4" />
-            Exporter .TXT
           </button>
         </div>
       </div>

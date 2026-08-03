@@ -35,10 +35,10 @@ export default function DashboardPage() {
         </h1>
 
         {/* Navigation tabs */}
-        <div className="flex gap-2 mb-8 border-b border-[#F4C2C2]/30 pb-px">
+        <div className="flex gap-2 mb-8 border-b border-[#F4C2C2]/30 pb-px overflow-x-auto sm:overflow-visible no-scrollbar">
           <button
             onClick={() => navigate("/")}
-            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-t-xl text-sm font-semibold transition-all cursor-pointer ${
+            className={`shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-t-xl text-sm font-semibold transition-all cursor-pointer ${
               location.pathname === "/"
                 ? "bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3] text-[#5c1d24] shadow-sm"
                 : "text-[#605249] hover:text-[#D55C66] hover:bg-[#F4C2C2]/10"
@@ -49,7 +49,7 @@ export default function DashboardPage() {
           </button>
           <button
             onClick={() => navigate("/mes-favoris")}
-            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-t-xl text-sm font-semibold transition-all cursor-pointer ${
+            className={`shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-t-xl text-sm font-semibold transition-all cursor-pointer ${
               location.pathname === "/mes-favoris"
                 ? "bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3] text-[#5c1d24] shadow-sm"
                 : "text-[#605249] hover:text-[#D55C66] hover:bg-[#F4C2C2]/10"
@@ -60,7 +60,7 @@ export default function DashboardPage() {
           </button>
           <button
             onClick={() => navigate("/parametres")}
-            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-t-xl text-sm font-semibold transition-all cursor-pointer ${
+            className={`shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-t-xl text-sm font-semibold transition-all cursor-pointer ${
               location.pathname === "/parametres"
                 ? "bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3] text-[#5c1d24] shadow-sm"
                 : "text-[#605249] hover:text-[#D55C66] hover:bg-[#F4C2C2]/10"

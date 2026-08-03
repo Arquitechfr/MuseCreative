@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Heart, User as UserIcon, LogOut, Settings, Bookmark, ChevronDown } from "lucide-react";
+import { Heart, User as UserIcon, LogOut, Settings, Bookmark, ChevronDown, Menu, X } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useAuthModal } from "../contexts/AuthModalContext";
 
@@ -10,12 +10,17 @@ export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setDropdownOpen(false);
+      }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(e.target as Node)) {
+        setMobileMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -29,22 +34,33 @@ export default function Header() {
   const handleSignOut = async () => {
     await signOut();
     setDropdownOpen(false);
+    setMobileMenuOpen(false);
     navigate("/");
   };
 
   const isActive = (path: string) => location.pathname === path;
 
+  const handleMobileNavigate = (path: string) => {
+    setMobileMenuOpen(false);
+    navigate(path);
+  };
+
+  const handleMobileAuth = (mode: "login" | "signup") => {
+    setMobileMenuOpen(false);
+    openAuthModal(mode);
+  };
+
   return (
     <header className="border-b border-[#F4C2C2]/40 bg-white/30 sticky top-0 z-50 shadow-[0_2px_12px_rgba(244,194,194,0.12)]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-2">
         <button
           onClick={handleLogoClick}
-          className="flex items-center hover:opacity-85 transition-opacity cursor-pointer text-left select-none gap-2 sm:gap-3"
+          className="flex items-center hover:opacity-85 transition-opacity cursor-pointer text-left select-none gap-1.5 sm:gap-3 min-w-0"
         >
-          <span className="font-serif-elegant text-xl sm:text-2xl font-bold tracking-tight text-[#2d1b15] select-none pb-0.5">
+          <span className="font-serif-elegant text-base sm:text-2xl font-bold tracking-tight text-[#2d1b15] select-none pb-0.5 truncate">
             Muse Créative
           </span>
-          <div className="w-9 h-7 sm:w-10 sm:h-8 relative rotate-[12deg] transform origin-center flex items-center justify-center -mt-1">
+          <div className="w-7 h-6 sm:w-10 sm:h-8 relative rotate-[12deg] transform origin-center flex items-center justify-center -mt-1 shrink-0">
             <svg
               viewBox="0 0 120 90"
               className="w-full h-full"
@@ -82,7 +98,8 @@ export default function Header() {
           </div>
         </button>
 
-        <div className="flex items-center gap-3 text-xs font-semibold text-[#605249]/80 tracking-wide">
+        {/* Desktop (>= sm) : badge + boutons auth / menu user */}
+        <div className="hidden sm:flex items-center gap-3 text-xs font-semibold text-[#605249]/80 tracking-wide">
           <span className="inline-flex items-center gap-1 bg-[#5c1d24]/10 border border-[#5c1d24]/20 text-[#5c1d24] px-2.5 py-1 rounded-full text-[10px] uppercase font-bold tracking-wide shadow-3xs">
             <Heart className="w-2.5 h-2.5 fill-[#5c1d24] stroke-[#5c1d24]" />
             Romance Edition
@@ -161,6 +178,82 @@ export default function Header() {
               </button>
             </div>
           )}
+        </div>
+
+        {/* Mobile (< sm) : badge compact + hamburger */}
+        <div className="sm:hidden flex items-center gap-2">
+          <span className="inline-flex items-center gap-1 bg-[#5c1d24]/10 border border-[#5c1d24]/20 text-[#5c1d24] px-2 py-1 rounded-full text-[9px] uppercase font-bold tracking-wide shadow-3xs">
+            <Heart className="w-2 h-2 fill-[#5c1d24] stroke-[#5c1d24]" />
+            Romance
+          </span>
+
+          <div className="relative" ref={mobileMenuRef}>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label={mobileMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+              aria-expanded={mobileMenuOpen}
+              className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-white/60 hover:bg-white border border-[#605249]/15 text-[#2c2520] transition-all cursor-pointer"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+
+            {mobileMenuOpen && (
+              <div className="absolute right-0 top-full mt-2 w-60 bg-[#fffdfa] rounded-2xl shadow-xl border border-[#F4C2C2]/30 py-2 z-50">
+                {isAuthenticated ? (
+                  <>
+                    <div className="px-4 py-2 mb-1 border-b border-[#605249]/10">
+                      <p className="text-[10px] uppercase tracking-wide text-[#605249]/60 font-semibold">Connecté</p>
+                      <p className="text-sm text-[#2c2520] font-medium truncate">{profile?.prenom || "Mon compte"}</p>
+                    </div>
+                    <button
+                      onClick={() => handleMobileNavigate("/mon-espace")}
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#2c2520] hover:bg-[#F4C2C2]/10 transition-colors cursor-pointer text-left"
+                    >
+                      <UserIcon className="w-4 h-4 text-[#D55C66]" />
+                      Mon espace
+                    </button>
+                    <button
+                      onClick={() => handleMobileNavigate("/mes-favoris")}
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#2c2520] hover:bg-[#F4C2C2]/10 transition-colors cursor-pointer text-left"
+                    >
+                      <Bookmark className="w-4 h-4 text-[#D55C66]" />
+                      Mes favoris
+                    </button>
+                    <button
+                      onClick={() => handleMobileNavigate("/parametres")}
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#2c2520] hover:bg-[#F4C2C2]/10 transition-colors cursor-pointer text-left"
+                    >
+                      <Settings className="w-4 h-4 text-[#D55C66]" />
+                      Paramètres
+                    </button>
+                    <div className="h-px bg-[#605249]/10 my-1" />
+                    <button
+                      onClick={handleSignOut}
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#D55C66] hover:bg-[#D55C66]/5 transition-colors cursor-pointer text-left"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Déconnexion
+                    </button>
+                  </>
+                ) : (
+                  <div className="p-3 space-y-2">
+                    <button
+                      onClick={() => handleMobileAuth("login")}
+                      className="w-full inline-flex items-center justify-center gap-1.5 bg-white/60 hover:bg-white border border-[#605249]/15 text-[#2c2520] px-3.5 py-2.5 rounded-xl text-sm font-bold transition-all cursor-pointer"
+                    >
+                      Connexion
+                    </button>
+                    <button
+                      onClick={() => handleMobileAuth("signup")}
+                      className="w-full inline-flex items-center justify-center gap-1.5 bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3] hover:opacity-95 text-[#5c1d24] px-3.5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-sm cursor-pointer"
+                    >
+                      S'inscrire
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>
