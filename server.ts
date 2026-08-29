@@ -9,7 +9,7 @@ dotenv.config();
 
 async function startServer() {
   const app = express();
-  const PORT = parseInt(process.env.PORT || "0902", 10);
+  const PORT = parseInt(process.env.PORT || "9020", 10);
 
   app.use(express.json());
 
