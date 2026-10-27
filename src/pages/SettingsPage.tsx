@@ -30,41 +30,41 @@ export default function SettingsPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <h1 className="font-serif-elegant text-3xl sm:text-4xl font-bold text-[#2d1b15] mb-8">
+        <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1715] mb-8">
           Paramètres
         </h1>
 
         {/* Account info */}
-        <div className="bg-white/70 rounded-2xl border border-[#F4C2C2]/30 p-6 mb-6 shadow-sm">
-          <h2 className="font-serif text-lg font-bold text-[#2c2520] mb-4">
+        <div className="bg-white/70 rounded-2xl border border-[#D9CEBC]/30 p-6 mb-6 shadow-sm">
+          <h2 className="font-serif text-lg font-bold text-[#1A1715] mb-4">
             Informations du compte
           </h2>
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#D55C66]/10 flex items-center justify-center shrink-0">
-                <UserIcon className="w-5 h-5 text-[#D55C66]" />
+              <div className="w-10 h-10 rounded-xl bg-[#8F7242]/10 flex items-center justify-center shrink-0">
+                <UserIcon className="w-5 h-5 text-[#8F7242]" />
               </div>
               <div>
-                <p className="text-xs text-[#605249]/60 uppercase tracking-wide font-semibold">Prénom</p>
-                <p className="text-sm text-[#2c2520] font-medium">{profile?.prenom || "—"}</p>
+                <p className="text-xs text-[#5C5449]/60 uppercase tracking-wide font-semibold">Prénom</p>
+                <p className="text-sm text-[#1A1715] font-medium">{profile?.prenom || "—"}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#D55C66]/10 flex items-center justify-center shrink-0">
-                <Mail className="w-5 h-5 text-[#D55C66]" />
+              <div className="w-10 h-10 rounded-xl bg-[#8F7242]/10 flex items-center justify-center shrink-0">
+                <Mail className="w-5 h-5 text-[#8F7242]" />
               </div>
               <div>
-                <p className="text-xs text-[#605249]/60 uppercase tracking-wide font-semibold">Email</p>
-                <p className="text-sm text-[#2c2520] font-medium">{profile?.email || "—"}</p>
+                <p className="text-xs text-[#5C5449]/60 uppercase tracking-wide font-semibold">Email</p>
+                <p className="text-sm text-[#1A1715] font-medium">{profile?.email || "—"}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#D55C66]/10 flex items-center justify-center shrink-0">
-                <UserIcon className="w-5 h-5 text-[#D55C66]" />
+              <div className="w-10 h-10 rounded-xl bg-[#8F7242]/10 flex items-center justify-center shrink-0">
+                <UserIcon className="w-5 h-5 text-[#8F7242]" />
               </div>
               <div>
-                <p className="text-xs text-[#605249]/60 uppercase tracking-wide font-semibold">Méthode de connexion</p>
-                <p className="text-sm text-[#2c2520] font-medium">
+                <p className="text-xs text-[#5C5449]/60 uppercase tracking-wide font-semibold">Méthode de connexion</p>
+                <p className="text-sm text-[#1A1715] font-medium">
                   {profile?.provider === "google" ? "Google" : "Email & mot de passe"}
                 </p>
               </div>
@@ -109,11 +109,11 @@ export default function SettingsPage() {
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ duration: 0.25 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-[#fffdfa] rounded-3xl shadow-2xl w-full max-w-md p-6 relative border border-red-200/30"
+              className="bg-[#FAF8F5] rounded-3xl shadow-2xl w-full max-w-md p-6 relative border border-red-200/30"
             >
               <button
                 onClick={() => !deleting && setShowDeleteConfirm(false)}
-                className="absolute top-4 right-4 text-[#605249]/50 hover:text-[#D55C66] transition-colors cursor-pointer"
+                className="absolute top-4 right-4 text-[#5C5449]/50 hover:text-[#8F7242] transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -122,10 +122,10 @@ export default function SettingsPage() {
                 <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
                   <AlertTriangle className="w-7 h-7 text-red-600" />
                 </div>
-                <h3 className="font-serif-elegant text-xl font-bold text-[#2d1b15] mb-2">
+                <h3 className="font-serif text-xl font-medium text-[#1A1715] mb-2">
                   Supprimer définitivement ?
                 </h3>
-                <p className="text-sm text-[#605249]">
+                <p className="text-sm text-[#5C5449]">
                   Ton compte, tes favoris et toutes tes données seront supprimés pour toujours.
                   Cette action est <strong>irréversible</strong>.
                 </p>
@@ -141,7 +141,7 @@ export default function SettingsPage() {
                 <button
                   onClick={() => setShowDeleteConfirm(false)}
                   disabled={deleting}
-                  className="flex-1 py-3 bg-[#faf8f5] hover:bg-white text-[#2c2520] border border-[#605249]/20 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
+                  className="flex-1 py-3 bg-[#faf8f5] hover:bg-white text-[#1A1715] border border-[#5C5449]/20 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
                 >
                   Annuler
                 </button>

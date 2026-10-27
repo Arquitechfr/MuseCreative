@@ -149,6 +149,52 @@ async function startServer() {
     }
   });
 
+  // API Waitlist endpoint - Liste d'attente "Muse de la stratégie"
+  // Ajoute le contact à une liste Brevo (BREVO_WAITLIST_LIST_ID) ;
+  // sans liste configurée, envoie l'inscription par email à FEEDBACK_EMAIL.
+  app.post("/api/waitlist", async (req: express.Request, res: express.Response) => {
+    try {
+      const email = typeof req.body?.email === "string" ? req.body.email.trim().toLowerCase() : "";
+      console.log(`  → Inscription liste d'attente: ${email || "(vide)"}`);
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
+        return res.status(400).json({ error: "Merci d'indiquer une adresse email valide." });
+      }
+
+      const brevoApiKey = process.env.BREVO_API_KEY || "";
+      if (!brevoApiKey) {
+        console.log(`  ⚠ BREVO_API_KEY non configuré - inscription non enregistrée`);
+        return res.json({ success: true, warning: "email_not_configured" });
+      }
+
+      const brevo = new BrevoClient({ apiKey: brevoApiKey });
+      const listId = parseInt(process.env.BREVO_WAITLIST_LIST_ID || "", 10);
+
+      if (Number.isFinite(listId) && listId > 0) {
+        await brevo.contacts.createContact({ email, listIds: [listId], updateEnabled: true });
+        console.log(`  ✓ Contact ajouté à la liste Brevo #${listId}`);
+      } else {
+        const feedbackEmail = process.env.FEEDBACK_EMAIL || "contact@musecreative.fr";
+        await brevo.transactionalEmails.sendTransacEmail({
+          subject: `Liste d'attente Muse de la stratégie - ${email}`,
+          sender: {
+            name: process.env.BREVO_SENDER_NAME || "Muse Créative",
+            email: process.env.BREVO_SENDER_EMAIL || "contact@musecreative.fr",
+          },
+          to: [{ email: feedbackEmail }],
+          replyTo: { email },
+          textContent: `Nouvelle inscription à la liste d'attente de la Muse de la stratégie :\n\n${email}\n\n---\nEnvoyé depuis Muse Créative`,
+        });
+        console.log(`  ✓ Inscription envoyée par email à ${feedbackEmail} (BREVO_WAITLIST_LIST_ID non défini)`);
+      }
+
+      return res.json({ success: true });
+    } catch (error: any) {
+      console.error("  ✗ Waitlist Error:", error);
+      res.status(500).json({ error: "Une erreur est survenue, réessaie dans un instant." });
+    }
+  });
+
   // Serve Vite in dev, static assets in production
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
@@ -181,7 +227,7 @@ async function startServer() {
     console.log(`  Mode : ${mode}`);
     console.log(`  Port : ${process.env.PORT || PORT}`);
     console.log(`  URL  : http://localhost:${PORT}`);
-    console.log(`  API  : /api/health, /api/generate`);
+    console.log(`  API  : /api/health, /api/generate, /api/feedback, /api/waitlist`);
     console.log("─".repeat(50));
     console.log("  Server started successfully ✓");
   });

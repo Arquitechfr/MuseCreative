@@ -45,7 +45,7 @@ export default function FavoritesPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="w-8 h-8 border-2 border-[#D55C66]/30 border-t-[#D55C66] rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[#8F7242]/30 border-t-[#8F7242] rounded-full animate-spin" />
       </div>
     );
   }
@@ -59,10 +59,10 @@ export default function FavoritesPage() {
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="font-serif-elegant text-3xl sm:text-4xl font-bold text-[#2d1b15] mb-1">
+            <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1715] mb-1">
               Mes favoris
             </h1>
-            <p className="text-sm text-[#605249]">
+            <p className="text-sm text-[#5C5449]">
               {favorites.length > 0
                 ? `${favorites.length} idée${favorites.length > 1 ? "s" : ""} sauvegardée${favorites.length > 1 ? "s" : ""}`
                 : "Aucune idée en favoris pour le moment"}
@@ -72,13 +72,13 @@ export default function FavoritesPage() {
 
         {favorites.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="w-16 h-16 rounded-full bg-[#D55C66]/10 flex items-center justify-center mb-4">
-              <Bookmark className="w-8 h-8 text-[#D55C66]/40" />
+            <div className="w-16 h-16 rounded-full bg-[#8F7242]/10 flex items-center justify-center mb-4">
+              <Bookmark className="w-8 h-8 text-[#8F7242]/40" />
             </div>
-            <h2 className="font-serif text-xl font-bold text-[#2c2520] mb-2">
+            <h2 className="font-serif text-xl font-bold text-[#1A1715] mb-2">
               Tu n'as pas encore d'idées en favoris
             </h2>
-            <p className="text-sm text-[#605249] max-w-md">
+            <p className="text-sm text-[#5C5449] max-w-md">
               Génère des idées de contenu et clique sur le cœur ❤️ pour les sauvegarder ici.
             </p>
           </div>
@@ -90,17 +90,17 @@ export default function FavoritesPage() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.05 }}
-                className="bg-white rounded-2xl border border-[#D55C66]/20 shadow-sm p-6 relative overflow-hidden group"
+                className="bg-white rounded-2xl border border-[#8F7242]/20 shadow-sm p-6 relative overflow-hidden group"
               >
-                <div className="absolute top-0 bottom-0 left-0 w-1.5 bg-gradient-to-b from-[#D55C66] to-[#FBC8A6]" />
+                <div className="absolute top-0 bottom-0 left-0 w-1.5 bg-gradient-to-b from-[#C5A876] to-[#E8E1D5]" />
 
                 <div className="pl-2">
                   <div className="flex items-start justify-between gap-4 mb-3">
                     <div className="flex-grow">
-                      <span className="inline-block text-[10px] font-bold uppercase tracking-wide text-[#D55C66] bg-[#D55C66]/10 px-2 py-0.5 rounded-full mb-2">
+                      <span className="inline-block text-[10px] font-bold uppercase tracking-wide text-[#8F7242] bg-[#8F7242]/10 px-2 py-0.5 rounded-full mb-2">
                         {fav.etape}
                       </span>
-                      <h3 className="font-serif text-lg font-bold text-[#2c2520] group-hover:text-[#D55C66] transition-colors">
+                      <h3 className="font-serif text-lg font-bold text-[#1A1715] group-hover:text-[#8F7242] transition-colors">
                         {fav.idee}
                       </h3>
                     </div>
@@ -109,8 +109,8 @@ export default function FavoritesPage() {
                         onClick={() => handleCopy(fav)}
                         className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                           copiedId === fav.id
-                            ? "bg-[#b33e48] text-white"
-                            : "bg-[#faf8f5] text-[#D55C66] border border-[#D55C66]/25 hover:bg-[#D55C66]/5"
+                            ? "bg-[#6E5429] text-white"
+                            : "bg-[#faf8f5] text-[#8F7242] border border-[#8F7242]/25 hover:bg-[#8F7242]/5"
                         }`}
                       >
                         {copiedId === fav.id ? (
@@ -123,26 +123,26 @@ export default function FavoritesPage() {
                         onClick={() => handleRemove(fav.id)}
                         disabled={removingId === fav.id}
                         title="Retirer des favoris"
-                        className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-[#D55C66]/10 text-[#D55C66] border border-[#D55C66]/20 hover:bg-[#D55C66]/15 transition-all cursor-pointer disabled:opacity-50"
+                        className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-[#8F7242]/10 text-[#8F7242] border border-[#8F7242]/20 hover:bg-[#8F7242]/15 transition-all cursor-pointer disabled:opacity-50"
                       >
-                        <Heart className="w-4 h-4 fill-[#D55C66]" />
+                        <Heart className="w-4 h-4 fill-[#8F7242]" />
                       </button>
                     </div>
                   </div>
 
-                  <div className="bg-[#faf8f5] rounded-xl border border-[#605249]/5 p-4 text-sm text-[#2c2520] leading-relaxed italic font-serif mb-3">
+                  <div className="bg-[#faf8f5] rounded-xl border border-[#5C5449]/5 p-4 text-sm text-[#1A1715] leading-relaxed italic font-serif mb-3">
                     {fav.accroche}
                   </div>
 
                   {fav.structure && fav.structure.length > 0 && (
                     <div className="mb-3">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#605249]/50 block mb-1.5">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#5C5449]/50 block mb-1.5">
                         Structure :
                       </span>
                       <ol className="list-none space-y-1.5">
                         {fav.structure.map((step, i) => (
-                          <li key={i} className="flex items-start gap-2 text-xs text-[#605249]">
-                            <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#D55C66]/10 text-[#D55C66] font-bold text-[10px] shrink-0 mt-0.5">
+                          <li key={i} className="flex items-start gap-2 text-xs text-[#5C5449]">
+                            <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#8F7242]/10 text-[#8F7242] font-bold text-[10px] shrink-0 mt-0.5">
                               {i + 1}
                             </span>
                             <span className="leading-relaxed">{step}</span>
@@ -153,7 +153,7 @@ export default function FavoritesPage() {
                   )}
 
                   {fav.pourquoi_ca_marche && (
-                    <div className="bg-[#FBC8A6]/15 border-l-2 border-[#FBC8A6] px-3.5 py-2.5 rounded-r-xl text-xs text-[#605249] leading-relaxed italic">
+                    <div className="bg-[#FAF8F5] border-l-2 border-[#B89A62] px-3.5 py-2.5 rounded-r-xl text-xs text-[#5C5449] leading-relaxed italic">
                       {fav.pourquoi_ca_marche}
                     </div>
                   )}

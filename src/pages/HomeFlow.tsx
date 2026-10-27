@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { EtapeType, GeneratedIdea } from "../types";
+import HomeScreen from "../components/HomeScreen";
 import WelcomeScreen from "../components/WelcomeScreen";
 import GeneratingScreen from "../components/GeneratingScreen";
 import ResultsScreen from "../components/ResultsScreen";
@@ -10,13 +12,26 @@ import { useAuthModal } from "../contexts/AuthModalContext";
 export default function HomeFlow() {
   const { isAuthenticated } = useAuth();
   const { isOpen, openAuthModal } = useAuthModal();
-  const [step, setStep] = useState<"welcome" | "generating" | "results">("welcome");
+  const location = useLocation();
+  const [step, setStep] = useState<"home" | "welcome" | "generating" | "results">("home");
   const [etape, setEtape] = useState<EtapeType | null>(null);
   const [seenIdeas, setSeenIdeas] = useState<string[]>([]);
   const [generatedIdeas, setGeneratedIdeas] = useState<GeneratedIdea[]>([]);
   const [authPrompted, setAuthPrompted] = useState(false);
   const [pendingResults, setPendingResults] = useState(false);
   const wasModalOpen = useRef(false);
+  const lastLocationKey = useRef(location.key);
+
+  // Un clic sur le logo (navigation vers "/") ramène à l'accueil des muses
+  useEffect(() => {
+    if (lastLocationKey.current === location.key) return;
+    lastLocationKey.current = location.key;
+    setStep("home");
+    setEtape(null);
+    setSeenIdeas([]);
+    setAuthPrompted(false);
+    setPendingResults(false);
+  }, [location.key]);
 
   useEffect(() => {
     if (pendingResults && isAuthenticated) {
@@ -130,12 +145,31 @@ export default function HomeFlow() {
     setAuthPrompted(false);
   };
 
+  const handleBackToHome = () => {
+    setStep("home");
+    setEtape(null);
+    setSeenIdeas([]);
+    setAuthPrompted(false);
+  };
+
   const handleRegenerate = () => {
     if (etape) handleGeneratePlan(etape, true);
   };
 
   return (
     <AnimatePresence mode="wait">
+      {step === "home" && (
+        <motion.div
+          key="home"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -12 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+        >
+          <HomeScreen onSelectInspiration={() => setStep("welcome")} />
+        </motion.div>
+      )}
+
       {step === "welcome" && (
         <motion.div
           key="welcome"
@@ -144,7 +178,7 @@ export default function HomeFlow() {
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.3 }}
         >
-          <WelcomeScreen onSelectEtape={handleSelectEtape} />
+          <WelcomeScreen onSelectEtape={handleSelectEtape} onBackToMuses={handleBackToHome} />
         </motion.div>
       )}
 
