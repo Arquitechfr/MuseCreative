@@ -9,7 +9,7 @@ import SettingsPage from "./pages/SettingsPage";
 import LegalNoticePage from "./pages/LegalNoticePage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import ScrollToTop from "./components/ScrollToTop";
-import AntiqueMarbleMusePresence from "./components/AntiqueMarbleMusePresence";
+import GoldDust from "./components/olympe/GoldDust";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading } = useAuth();
@@ -31,20 +31,13 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-[#1A1715] flex flex-col selection:bg-[#C5A876]/20 selection:text-[#1A1715] relative overflow-x-hidden stone-paper-grain">
-      {/* Atmosphère : lumière de musée diffuse + Muse en marbre en bas-relief */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none">
-        <div className="absolute -top-[15%] left-[10%] w-[65vw] h-[50vw] max-w-[800px] max-h-[600px] rounded-full bg-gradient-to-b from-[#F5EFE3]/50 to-[#EAE3D4]/20 blur-[140px]" />
-        <div className="absolute bottom-[-10%] right-[10%] w-[55vw] h-[50vw] max-w-[700px] max-h-[550px] rounded-full bg-gradient-to-tl from-[#F4EFE6]/40 to-transparent blur-[140px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[850px] rounded-full border border-[#B89A62]/5" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] rounded-full border border-[#B89A62]/3" />
-        <AntiqueMarbleMusePresence />
-      </div>
+    <div className="min-h-screen bg-[radial-gradient(ellipse_70%_55%_at_50%_0%,#FFFDF8_0%,#FAF8F5_60%)] text-[#1A1715] flex flex-col selection:bg-[#C5A876]/20 selection:text-[#1A1715] relative overflow-x-hidden">
+      <GoldDust />
 
       <ScrollToTop />
       <Header />
 
-      <main className="flex-grow py-8 relative z-10">
+      <main className="flex-grow py-8 relative z-[2]">
         <Routes>
           <Route path="/" element={<HomeFlow />} />
           <Route path="/mon-espace" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
