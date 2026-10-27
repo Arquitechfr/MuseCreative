@@ -30,18 +30,18 @@ export default function DashboardPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <h1 className="font-serif-elegant text-3xl sm:text-4xl font-bold text-[#2d1b15] mb-6">
+        <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1715] mb-6">
           Bonjour {profile?.prenom}
         </h1>
 
         {/* Navigation tabs */}
-        <div className="flex gap-2 mb-8 border-b border-[#F4C2C2]/30 pb-px overflow-x-auto sm:overflow-visible no-scrollbar">
+        <div className="flex gap-2 mb-8 border-b border-[#D9CEBC]/30 pb-px overflow-x-auto sm:overflow-visible no-scrollbar">
           <button
             onClick={() => navigate("/")}
             className={`shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-t-xl text-sm font-semibold transition-all cursor-pointer ${
               location.pathname === "/"
-                ? "bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3] text-[#5c1d24] shadow-sm"
-                : "text-[#605249] hover:text-[#D55C66] hover:bg-[#F4C2C2]/10"
+                ? "bg-[#1A1715] text-[#FAF8F5] shadow-sm"
+                : "text-[#5C5449] hover:text-[#8F7242] hover:bg-[#D9CEBC]/10"
             }`}
           >
             <Sparkles className="w-4 h-4" />
@@ -51,8 +51,8 @@ export default function DashboardPage() {
             onClick={() => navigate("/mes-favoris")}
             className={`shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-t-xl text-sm font-semibold transition-all cursor-pointer ${
               location.pathname === "/mes-favoris"
-                ? "bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3] text-[#5c1d24] shadow-sm"
-                : "text-[#605249] hover:text-[#D55C66] hover:bg-[#F4C2C2]/10"
+                ? "bg-[#1A1715] text-[#FAF8F5] shadow-sm"
+                : "text-[#5C5449] hover:text-[#8F7242] hover:bg-[#D9CEBC]/10"
             }`}
           >
             <Bookmark className="w-4 h-4" />
@@ -62,8 +62,8 @@ export default function DashboardPage() {
             onClick={() => navigate("/parametres")}
             className={`shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-t-xl text-sm font-semibold transition-all cursor-pointer ${
               location.pathname === "/parametres"
-                ? "bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3] text-[#5c1d24] shadow-sm"
-                : "text-[#605249] hover:text-[#D55C66] hover:bg-[#F4C2C2]/10"
+                ? "bg-[#1A1715] text-[#FAF8F5] shadow-sm"
+                : "text-[#5C5449] hover:text-[#8F7242] hover:bg-[#D9CEBC]/10"
             }`}
           >
             <Settings className="w-4 h-4" />
@@ -72,16 +72,16 @@ export default function DashboardPage() {
         </div>
 
         {/* Stats card */}
-        <div className="bg-white/70 rounded-2xl border border-[#F4C2C2]/30 p-6 mb-6 shadow-sm">
+        <div className="bg-white/70 rounded-2xl border border-[#D9CEBC]/30 p-6 mb-6 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-[#D55C66]/10 flex items-center justify-center">
-              <Heart className="w-6 h-6 text-[#D55C66] fill-[#D55C66]/30" />
+            <div className="w-12 h-12 rounded-xl bg-[#8F7242]/10 flex items-center justify-center">
+              <Heart className="w-6 h-6 text-[#8F7242] fill-[#8F7242]/30" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-[#2c2520]">
+              <p className="text-2xl font-bold text-[#1A1715]">
                 {loading ? "…" : favorites.length}
               </p>
-              <p className="text-sm text-[#605249]">
+              <p className="text-sm text-[#5C5449]">
                 {favorites.length > 1 ? "idées en favoris" : "idée en favoris"}
               </p>
             </div>
@@ -92,12 +92,12 @@ export default function DashboardPage() {
         {recentFavorites.length > 0 && (
           <div className="mb-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-serif text-xl font-bold text-[#2c2520]">
+              <h2 className="font-serif text-xl font-bold text-[#1A1715]">
                 Tes favoris récents
               </h2>
               <Link
                 to="/mes-favoris"
-                className="text-sm text-[#D55C66] hover:text-[#b33e48] font-semibold transition-colors"
+                className="text-sm text-[#8F7242] hover:text-[#6E5429] font-semibold transition-colors"
               >
                 Voir tous mes favoris →
               </Link>
@@ -106,15 +106,15 @@ export default function DashboardPage() {
               {recentFavorites.map((fav) => (
                 <div
                   key={fav.id}
-                  className="bg-white/70 rounded-xl border border-[#F4C2C2]/20 p-4 hover:shadow-sm transition-all"
+                  className="bg-white/70 rounded-xl border border-[#D9CEBC]/20 p-4 hover:shadow-sm transition-all"
                 >
-                  <span className="inline-block text-[10px] font-bold uppercase tracking-wide text-[#D55C66] bg-[#D55C66]/10 px-2 py-0.5 rounded-full mb-2">
+                  <span className="inline-block text-[10px] font-bold uppercase tracking-wide text-[#8F7242] bg-[#8F7242]/10 px-2 py-0.5 rounded-full mb-2">
                     {fav.etape}
                   </span>
-                  <h3 className="font-serif text-base font-bold text-[#2c2520] mb-1">
+                  <h3 className="font-serif text-base font-bold text-[#1A1715] mb-1">
                     {fav.idee}
                   </h3>
-                  <p className="text-sm text-[#605249] line-clamp-2 italic font-serif">
+                  <p className="text-sm text-[#5C5449] line-clamp-2 italic font-serif">
                     {fav.accroche}
                   </p>
                 </div>

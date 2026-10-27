@@ -145,24 +145,24 @@ export default function AuthModal({ isOpen, initialMode = "login", onClose, titl
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ duration: 0.25 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#fffdfa] rounded-3xl shadow-2xl w-full max-w-md p-6 sm:p-8 relative border border-[#F4C2C2]/30"
+            className="bg-[#FAF8F5] rounded-3xl shadow-2xl w-full max-w-md p-6 sm:p-8 relative border border-[#D9CEBC]/30"
           >
             <button
               onClick={handleClose}
-              className="absolute top-4 right-4 text-[#605249]/50 hover:text-[#D55C66] transition-colors cursor-pointer"
+              className="absolute top-4 right-4 text-[#5C5449]/50 hover:text-[#8F7242] transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="text-center mb-6">
-              <h2 className="font-serif-elegant text-2xl font-bold text-[#2d1b15] mb-1">
+              <h2 className="font-serif text-2xl font-medium text-[#1A1715] mb-1">
                 {modalTitle}
               </h2>
               {mode === "signup" && (
-                <p className="text-sm text-[#605249]/70">Rejoins Muse Créative, c'est gratuit ✨</p>
+                <p className="text-sm text-[#5C5449]/70">Rejoins Muse Créative, c'est gratuit ✨</p>
               )}
               {mode === "login" && (
-                <p className="text-sm text-[#605249]/70">Contente de te revoir !</p>
+                <p className="text-sm text-[#5C5449]/70">Contente de te revoir !</p>
               )}
             </div>
 
@@ -183,48 +183,48 @@ export default function AuthModal({ isOpen, initialMode = "login", onClose, titl
             <form onSubmit={handleSubmit} className="space-y-4">
               {mode === "signup" && (
                 <div>
-                  <label className="block text-xs font-semibold text-[#605249] mb-1.5 uppercase tracking-wide">Prénom</label>
+                  <label className="block text-xs font-semibold text-[#5C5449] mb-1.5 uppercase tracking-wide">Prénom</label>
                   <div className="relative">
-                    <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#605249]/40" />
+                    <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#5C5449]/40" />
                     <input
                       type="text"
                       value={prenom}
                       onChange={(e) => setPrenom(e.target.value)}
                       required
                       placeholder="Ton prénom"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#605249]/15 bg-[#faf8f5] text-sm text-[#2c2520] placeholder:text-[#605249]/40 focus:outline-none focus:border-[#D55C66]/50 focus:ring-2 focus:ring-[#D55C66]/10 transition-all"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#5C5449]/15 bg-[#faf8f5] text-sm text-[#1A1715] placeholder:text-[#5C5449]/40 focus:outline-none focus:border-[#8F7242]/50 focus:ring-2 focus:ring-[#8F7242]/10 transition-all"
                     />
                   </div>
                 </div>
               )}
 
               <div>
-                <label className="block text-xs font-semibold text-[#605249] mb-1.5 uppercase tracking-wide">Email</label>
+                <label className="block text-xs font-semibold text-[#5C5449] mb-1.5 uppercase tracking-wide">Email</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#605249]/40" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#5C5449]/40" />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     placeholder="ton@email.fr"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#605249]/15 bg-[#faf8f5] text-sm text-[#2c2520] placeholder:text-[#605249]/40 focus:outline-none focus:border-[#D55C66]/50 focus:ring-2 focus:ring-[#D55C66]/10 transition-all"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#5C5449]/15 bg-[#faf8f5] text-sm text-[#1A1715] placeholder:text-[#5C5449]/40 focus:outline-none focus:border-[#8F7242]/50 focus:ring-2 focus:ring-[#8F7242]/10 transition-all"
                   />
                 </div>
               </div>
 
               {mode !== "forgot-password" && (
                 <div>
-                  <label className="block text-xs font-semibold text-[#605249] mb-1.5 uppercase tracking-wide">Mot de passe</label>
+                  <label className="block text-xs font-semibold text-[#5C5449] mb-1.5 uppercase tracking-wide">Mot de passe</label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#605249]/40" />
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#5C5449]/40" />
                     <input
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       placeholder="••••••••"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#605249]/15 bg-[#faf8f5] text-sm text-[#2c2520] placeholder:text-[#605249]/40 focus:outline-none focus:border-[#D55C66]/50 focus:ring-2 focus:ring-[#D55C66]/10 transition-all"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#5C5449]/15 bg-[#faf8f5] text-sm text-[#1A1715] placeholder:text-[#5C5449]/40 focus:outline-none focus:border-[#8F7242]/50 focus:ring-2 focus:ring-[#8F7242]/10 transition-all"
                     />
                   </div>
                 </div>
@@ -232,16 +232,16 @@ export default function AuthModal({ isOpen, initialMode = "login", onClose, titl
 
               {mode === "signup" && (
                 <div>
-                  <label className="block text-xs font-semibold text-[#605249] mb-1.5 uppercase tracking-wide">Confirmer le mot de passe</label>
+                  <label className="block text-xs font-semibold text-[#5C5449] mb-1.5 uppercase tracking-wide">Confirmer le mot de passe</label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#605249]/40" />
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#5C5449]/40" />
                     <input
                       type="password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
                       placeholder="••••••••"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#605249]/15 bg-[#faf8f5] text-sm text-[#2c2520] placeholder:text-[#605249]/40 focus:outline-none focus:border-[#D55C66]/50 focus:ring-2 focus:ring-[#D55C66]/10 transition-all"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#5C5449]/15 bg-[#faf8f5] text-sm text-[#1A1715] placeholder:text-[#5C5449]/40 focus:outline-none focus:border-[#8F7242]/50 focus:ring-2 focus:ring-[#8F7242]/10 transition-all"
                     />
                   </div>
                 </div>
@@ -253,9 +253,9 @@ export default function AuthModal({ isOpen, initialMode = "login", onClose, titl
                     type="checkbox"
                     checked={consent}
                     onChange={(e) => setConsent(e.target.checked)}
-                    className="mt-0.5 w-4 h-4 rounded border-[#605249]/30 text-[#D55C66] focus:ring-[#D55C66]/20 cursor-pointer"
+                    className="mt-0.5 w-4 h-4 rounded border-[#5C5449]/30 text-[#8F7242] focus:ring-[#8F7242]/20 cursor-pointer"
                   />
-                  <span className="text-xs text-[#605249] leading-relaxed group-hover:text-[#2c2520] transition-colors">
+                  <span className="text-xs text-[#5C5449] leading-relaxed group-hover:text-[#1A1715] transition-colors">
                     J'accepte de recevoir des emails de Muse Créative
                   </span>
                 </label>
@@ -266,7 +266,7 @@ export default function AuthModal({ isOpen, initialMode = "login", onClose, titl
                   <button
                     type="button"
                     onClick={() => switchMode("forgot-password")}
-                    className="text-xs text-[#D55C66] hover:text-[#b33e48] font-medium transition-colors cursor-pointer"
+                    className="text-xs text-[#8F7242] hover:text-[#6E5429] font-medium transition-colors cursor-pointer"
                   >
                     Mot de passe oublié ?
                   </button>
@@ -276,7 +276,7 @@ export default function AuthModal({ isOpen, initialMode = "login", onClose, titl
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 bg-gradient-to-r from-[#FFA3A5] to-[#FFD1B3] hover:opacity-95 text-[#5c1d24] rounded-xl text-sm font-bold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="w-full py-3.5 bg-[#1A1715] hover:bg-[#332D25] text-[#FAF8F5] rounded-xl text-sm font-bold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {loading ? "Patiente..." : mode === "signup" ? "Créer mon compte" : mode === "login" ? "Se connecter" : "Envoyer le lien"}
               </button>
@@ -285,15 +285,15 @@ export default function AuthModal({ isOpen, initialMode = "login", onClose, titl
             {mode !== "forgot-password" && (
               <>
                 <div className="flex items-center gap-3 my-5">
-                  <div className="flex-grow h-px bg-[#605249]/15" />
-                  <span className="text-xs text-[#605249]/50 font-medium">ou</span>
-                  <div className="flex-grow h-px bg-[#605249]/15" />
+                  <div className="flex-grow h-px bg-[#5C5449]/15" />
+                  <span className="text-xs text-[#5C5449]/50 font-medium">ou</span>
+                  <div className="flex-grow h-px bg-[#5C5449]/15" />
                 </div>
 
                 <button
                   onClick={handleGoogle}
                   disabled={loading}
-                  className="w-full py-3.5 bg-white hover:bg-[#faf8f5] text-[#2c2520] border border-[#605249]/20 rounded-xl text-sm font-semibold transition-all shadow-sm flex items-center justify-center gap-3 disabled:opacity-50 cursor-pointer"
+                  className="w-full py-3.5 bg-white hover:bg-[#faf8f5] text-[#1A1715] border border-[#5C5449]/20 rounded-xl text-sm font-semibold transition-all shadow-sm flex items-center justify-center gap-3 disabled:opacity-50 cursor-pointer"
                 >
                   <svg className="w-5 h-5" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -308,24 +308,24 @@ export default function AuthModal({ isOpen, initialMode = "login", onClose, titl
 
             <div className="text-center mt-5">
               {mode === "signup" && (
-                <p className="text-sm text-[#605249]">
+                <p className="text-sm text-[#5C5449]">
                   Déjà un compte ?{" "}
-                  <button onClick={() => switchMode("login")} className="text-[#D55C66] hover:text-[#b33e48] font-semibold transition-colors cursor-pointer">
+                  <button onClick={() => switchMode("login")} className="text-[#8F7242] hover:text-[#6E5429] font-semibold transition-colors cursor-pointer">
                     Se connecter
                   </button>
                 </p>
               )}
               {mode === "login" && (
-                <p className="text-sm text-[#605249]">
+                <p className="text-sm text-[#5C5449]">
                   Pas encore de compte ?{" "}
-                  <button onClick={() => switchMode("signup")} className="text-[#D55C66] hover:text-[#b33e48] font-semibold transition-colors cursor-pointer">
+                  <button onClick={() => switchMode("signup")} className="text-[#8F7242] hover:text-[#6E5429] font-semibold transition-colors cursor-pointer">
                     S'inscrire
                   </button>
                 </p>
               )}
               {mode === "forgot-password" && (
-                <p className="text-sm text-[#605249]">
-                  <button onClick={() => switchMode("login")} className="text-[#D55C66] hover:text-[#b33e48] font-semibold transition-colors cursor-pointer">
+                <p className="text-sm text-[#5C5449]">
+                  <button onClick={() => switchMode("login")} className="text-[#8F7242] hover:text-[#6E5429] font-semibold transition-colors cursor-pointer">
                     ← Retour à la connexion
                   </button>
                 </p>
