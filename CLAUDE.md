@@ -31,3 +31,9 @@ Depuis le 29/10/2026, la production est déployée par **Dokploy** (self-hosted 
 - **Health check** : Dokploy vérifie `GET /api/health` (doit répondre 200). Ne pas supprimer cette route ni la rendre dépendante d'un service externe (Firebase, Brevo…).
 - **Sans coupure** : la nouvelle version démarre, doit être saine, puis remplace l'ancienne ; en cas d'échec, l'ancienne reste en ligne. Les deux versions coexistent quelques secondes : éviter tout traitement au démarrage qui suppose une instance unique.
 - **Interdit** : FTP, SSH, `pm2 start` / `pm2 reload`, archives de déploiement.
+
+## Typographie
+
+- Jamais de tiret cadratin (U+2014), de barre horizontale (U+2015) ni de demi-cadratin entouré d'espaces (U+2013) dans le code, les commentaires, la doc, les textes d'UI, les messages de commit et de PR. Selon le rôle du tiret : virgules, deux-points, parenthèses ou deux phrases. Ne pas le remplacer par un trait d'union entouré d'espaces : reformuler. Plages numériques : `10-20` ou « de 10 à 20 ».
+- Les tirets déjà présents ne bloquent pas : les corriger seulement dans les lignes déjà modifiées.
+- `.slopguardrc.json` configure le scanner et les hooks anti-slop pour ce dépôt (chemins ignorés, règles coupées).
