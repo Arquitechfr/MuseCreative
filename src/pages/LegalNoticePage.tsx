@@ -36,9 +36,9 @@ export default function LegalNoticePage() {
             Hébergement
           </h2>
           <ul className="text-sm text-[#5C5449] leading-relaxed space-y-1 ml-4">
-            <li><strong>Nom de l'hébergeur</strong> : —</li>
-            <li><strong>Adresse</strong> : —</li>
-            <li><strong>Contact</strong> : —</li>
+            <li><strong>Nom de l'hébergeur</strong> : Scaleway SAS (RCS Paris 433 115 904)</li>
+            <li><strong>Adresse</strong> : 8, rue de la Ville-l'Évêque, 75008 Paris, France</li>
+            <li><strong>Contact</strong> : <a href="https://www.scaleway.com" className="underline" target="_blank" rel="noopener noreferrer">www.scaleway.com</a></li>
           </ul>
         </section>
 
